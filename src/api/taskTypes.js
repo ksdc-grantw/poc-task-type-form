@@ -1,5 +1,5 @@
 // Mock backend for task types, persisted in localStorage.
-const STORAGE_KEY = 'poc.taskTypes'
+const STORAGE_KEY = 'poc.taskTypes.v2'
 
 export const FUNCTIONS = {
   PDF: 'PDF',
@@ -42,6 +42,121 @@ const SEED = [
     status: 'INACTIVE',
     daysPriorToDueDate: 1,
     daysToExpiry: 2,
+  },
+  // Demo FORM task types: each targets a different goal and uses only preset toolbox types.
+  {
+    id: 5,
+    name: 'Promo Display Compliance',
+    function: 'FORM',
+    status: 'ACTIVE',
+    daysPriorToDueDate: 1,
+    daysToExpiry: 2,
+    form: {
+      version: 1,
+      surveyjsVersion: '3.2.0',
+      schema: {
+        pages: [
+          {
+            name: 'page1',
+            elements: [
+              { type: 'boolean', name: 'displayPresent', title: 'Is the promotional display set up?', isRequired: true },
+              {
+                type: 'dropdown',
+                name: 'displayType',
+                title: 'Display type',
+                visibleIf: '{displayPresent} = true',
+                isRequired: true,
+                choices: ['Gondola end', 'Floor stand', 'Counter unit', 'Fridge branding'],
+              },
+              {
+                type: 'slider',
+                name: 'facings',
+                title: 'Number of product facings on display',
+                visibleIf: '{displayPresent} = true',
+                min: 0,
+                max: 20,
+                step: 1,
+              },
+              { type: 'file', name: 'displayPhoto', title: 'Photo of the display', visibleIf: '{displayPresent} = true', acceptedTypes: 'image/*' },
+              { type: 'comment', name: 'reasonMissing', title: 'Why is the display not set up?', visibleIf: '{displayPresent} = false', isRequired: true },
+            ],
+          },
+        ],
+      },
+    },
+  },
+  {
+    id: 6,
+    name: 'Stock Availability Check',
+    function: 'FORM',
+    status: 'ACTIVE',
+    daysPriorToDueDate: 0,
+    daysToExpiry: 1,
+    form: {
+      version: 1,
+      surveyjsVersion: '3.2.0',
+      schema: {
+        pages: [
+          {
+            name: 'page1',
+            elements: [
+              {
+                type: 'matrix',
+                name: 'availability',
+                title: 'Stock level per product',
+                isRequired: true,
+                columns: [
+                  { value: 'in', text: 'In stock' },
+                  { value: 'low', text: 'Low' },
+                  { value: 'out', text: 'Out of stock' },
+                ],
+                rows: ['Cola 330ml', 'Cola 2L', 'Lemon 330ml', 'Water 500ml'],
+              },
+              {
+                type: 'radiogroup',
+                name: 'outOfStockCause',
+                title: 'Main cause of out-of-stocks',
+                choices: ['Not ordered', 'Delivery late', 'Stock in backroom', 'Delisted'],
+                showOtherItem: true,
+              },
+              { type: 'text', name: 'nextDelivery', title: 'Next expected delivery', inputType: 'date' },
+              { type: 'text', name: 'managerEmail', title: 'Store manager email for follow-up', inputType: 'email' },
+            ],
+          },
+        ],
+      },
+    },
+  },
+  {
+    id: 7,
+    name: 'Store Visit Feedback',
+    function: 'FORM',
+    status: 'INACTIVE',
+    daysPriorToDueDate: 0,
+    daysToExpiry: 3,
+    form: {
+      version: 2,
+      surveyjsVersion: '3.2.0',
+      schema: {
+        pages: [
+          {
+            name: 'page1',
+            elements: [
+              { type: 'rating', name: 'relationship', title: 'How satisfied is the store with our service?', rateMin: 1, rateMax: 5, isRequired: true },
+              {
+                type: 'checkbox',
+                name: 'topics',
+                title: 'Topics discussed',
+                choices: ['Pricing', 'Promotions', 'Deliveries', 'Merchandising', 'New products'],
+              },
+              { type: 'boolean', name: 'followUp', title: 'Does the store need a follow-up call?' },
+              { type: 'text', name: 'contactPhone', title: 'Contact number for follow-up', inputType: 'tel', visibleIf: '{followUp} = true', isRequired: true },
+              { type: 'comment', name: 'notes', title: 'Other notes' },
+            ],
+          },
+        ],
+      },
+    },
   },
 ]
 
