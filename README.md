@@ -49,7 +49,7 @@ The Creator is wrapped in `src/components/FormDesigner.jsx`. Configuration is ap
 A Survey Creator 3 UI preset (the format produced by the SurveyJS UI Preset Editor). It controls:
 
 - **Tabs** - only **Designer** and **Preview**. Logic, JSON editor, translations and themes are hidden.
-- **Toolbox** - Radio Button Group, Rating Scale, Slider, Checkboxes, Dropdown, Yes/No, File Upload, Single-Line Input, Email, Phone Number, Date, Long Text, Single-Select Matrix and Image. Email, Phone Number and Date are custom items: they create a `text` question with `inputType` set to `email`, `tel` or `date`.
+- **Toolbox** - Radio Button Group, Rating Scale, Slider, Checkboxes, Dropdown, Yes/No, File Upload, Single-Line Input, Email, Phone Number, Date, Long Text, Single-Select Matrix, Image and Instructions. Email, Phone Number and Date are custom items: they create a `text` question with `inputType` set to `email`, `tel` or `date`. Instructions is the `html` element: a read-only block of formatted text (e.g. photo guidelines) edited through its `html` property.
 - **Property grid** - `autoGenerateProperties: false`, so only the properties listed per class are shown (for example `name`, `title`, `description`, `isRequired` on questions). The `survey` class lists no properties.
 - **Options** - designer behaviour. `showSurveyHeader: false` hides the survey title and description on the design surface, because the task type supplies those outside the form. `previewDevice: "androidPhone"` and `previewOrientation: "portrait"` make the Preview tab default to a mobile portrait frame, matching how agents complete forms.
 - **Localization** - UI string overrides.

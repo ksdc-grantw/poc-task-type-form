@@ -72,6 +72,10 @@
       },
       {
         "name": "image"
+      },
+      {
+        "name": "html",
+        "title": "Instructions"
       }
     ],
     "categories": [
@@ -106,7 +110,8 @@
       {
         "category": "misc",
         "items": [
-          "image"
+          "image",
+          "html"
         ]
       }
     ]
@@ -139,6 +144,7 @@
         "file": {
           "properties": [
             "allowMultiple",
+            "sourceType",
             "acceptedCategories",
             "acceptedTypes",
             "maxSize"
@@ -192,6 +198,11 @@
             "imageLink",
             "contentMode",
             "altText"
+          ]
+        },
+        "html": {
+          "properties": [
+            "html"
           ]
         },
         "text": {

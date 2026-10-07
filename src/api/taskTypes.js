@@ -1,5 +1,5 @@
 // Mock backend for task types, persisted in localStorage.
-const STORAGE_KEY = 'poc.taskTypes.v2'
+const STORAGE_KEY = 'poc.taskTypes.v3'
 
 export const FUNCTIONS = {
   PDF: 'PDF',
@@ -152,6 +152,54 @@ const SEED = [
               { type: 'boolean', name: 'followUp', title: 'Does the store need a follow-up call?' },
               { type: 'text', name: 'contactPhone', title: 'Contact number for follow-up', inputType: 'tel', visibleIf: '{followUp} = true', isRequired: true },
               { type: 'comment', name: 'notes', title: 'Other notes' },
+            ],
+          },
+        ],
+      },
+    },
+  },
+  {
+    id: 8,
+    name: 'Shelf & Customer Photos',
+    function: 'FORM',
+    status: 'ACTIVE',
+    daysPriorToDueDate: 0,
+    daysToExpiry: 1,
+    form: {
+      version: 1,
+      surveyjsVersion: '3.2.0',
+      schema: {
+        pages: [
+          {
+            name: 'page1',
+            elements: [
+              {
+                type: 'html',
+                name: 'instructions',
+                html:
+                  '<h4>Photo guidelines</h4><ul><li>Take one photo per shelf bay, standing about 1 m back.</li><li>Make sure price tags are readable.</li><li>Only photograph customers who have given verbal consent.</li></ul>',
+              },
+              {
+                type: 'file',
+                name: 'shelfPhotos',
+                title: 'Shelf photos',
+                description: 'Up to 5 photos, one per bay.',
+                isRequired: true,
+                allowMultiple: true,
+                acceptedTypes: 'image/*',
+                sourceType: 'file-camera',
+              },
+              { type: 'boolean', name: 'customerConsent', title: 'Did a customer agree to be photographed?' },
+              {
+                type: 'file',
+                name: 'customerPhotos',
+                title: 'Customer photos',
+                visibleIf: '{customerConsent} = true',
+                allowMultiple: true,
+                acceptedTypes: 'image/*',
+                sourceType: 'camera',
+              },
+              { type: 'comment', name: 'notes', title: 'Notes' },
             ],
           },
         ],
