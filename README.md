@@ -11,6 +11,8 @@ npm run build
 npm run lint
 ```
 
+Live: https://ksdc-grantw.github.io/poc-task-type-form/ - deployed by `.github/workflows/deploy.yml` on every push to `main`.
+
 ## Screens
 
 - `/` - task type list (mock backend in `src/api/taskTypes.js`, persisted to `localStorage`).
