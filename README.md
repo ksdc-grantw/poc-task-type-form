@@ -36,4 +36,5 @@ On update (`PUT`), `name` and `function` are omitted because they are locked. `f
 ## Notes
 
 - Survey Creator needs a commercial licence; without one, it shows a banner.
-- The toolbox is limited to question types that don't embed base64 content (no image, image picker, file or signature).
+- The Creator UI (tabs, toolbox, property grid) is configured by `src/config/preset.json`, applied with `UIPreset.applyTo()`.
+- The preset includes `file` and `image` questions, which embed base64 content in the schema/answers by default. Use `creator.onUploadFile` to store files externally if payload size matters.

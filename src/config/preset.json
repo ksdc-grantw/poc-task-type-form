@@ -1,0 +1,256 @@
+{
+  "tabs": {
+    "items": [
+      {
+        "name": "designer"
+      },
+      {
+        "name": "preview"
+      }
+    ],
+    "activeTab": "designer"
+  },
+  "toolbox": {
+    "definition": [
+      {
+        "name": "radiogroup"
+      },
+      {
+        "name": "rating"
+      },
+      {
+        "name": "slider"
+      },
+      {
+        "name": "checkbox"
+      },
+      {
+        "name": "dropdown"
+      },
+      {
+        "name": "boolean"
+      },
+      {
+        "name": "file"
+      },
+      {
+        "name": "text",
+        "subitems": []
+      },
+      {
+        "name": "email",
+        "title": "Email",
+        "iconName": "icon-toolbox-email-24x24",
+        "json": {
+          "type": "text",
+          "inputType": "email"
+        }
+      },
+      {
+        "name": "tel",
+        "title": "Phone Number",
+        "iconName": "icon-toolbox-phone-24x24",
+        "json": {
+          "type": "text",
+          "inputType": "tel"
+        }
+      },
+      {
+        "name": "date",
+        "title": "Date",
+        "iconName": "icon-toolbox-calendar-24x24",
+        "json": {
+          "type": "text",
+          "inputType": "date"
+        }
+      },
+      {
+        "name": "comment"
+      },
+      {
+        "name": "matrix"
+      },
+      {
+        "name": "image"
+      }
+    ],
+    "categories": [
+      {
+        "category": "choice",
+        "items": [
+          "radiogroup",
+          "rating",
+          "slider",
+          "checkbox",
+          "dropdown",
+          "boolean",
+          "file"
+        ]
+      },
+      {
+        "category": "text",
+        "items": [
+          "text",
+          "email",
+          "tel",
+          "date",
+          "comment"
+        ]
+      },
+      {
+        "category": "matrix",
+        "items": [
+          "matrix"
+        ]
+      },
+      {
+        "category": "misc",
+        "items": [
+          "image"
+        ]
+      }
+    ]
+  },
+  "propertyGrid": {
+    "definition": {
+      "autoGenerateProperties": false,
+      "classes": {
+        "survey": {
+          "properties": [],
+          "tabs": []
+        },
+        "question": {
+          "properties": [
+            "name",
+            "title",
+            "description",
+            "isRequired",
+            {
+              "name": "correctAnswer",
+              "index": 100000
+            }
+          ]
+        },
+        "comment": {
+          "properties": [
+            "maxLength"
+          ]
+        },
+        "file": {
+          "properties": [
+            "allowMultiple",
+            "acceptedCategories",
+            "acceptedTypes",
+            "maxSize"
+          ]
+        },
+        "matrix": {
+          "properties": [
+            "cellType",
+            "columns",
+            "rows",
+            "rowOrder",
+            "eachRowRequired",
+            "eachRowUnique"
+          ]
+        },
+        "rating": {
+          "properties": [
+            "rateType",
+            "rateMin",
+            "rateMax",
+            "rateStep",
+            "minRateDescription",
+            "maxRateDescription"
+          ]
+        },
+        "slider": {
+          "properties": [
+            "sliderType",
+            "min",
+            "max",
+            "step",
+            "minRangeLength",
+            "maxRangeLength"
+          ]
+        },
+        "selectbase": {
+          "properties": [
+            "choices",
+            "choicesOrder",
+            "showOtherItem",
+            "showNoneItem"
+          ]
+        },
+        "checkbox": {
+          "properties": [
+            "showSelectAllItem"
+          ]
+        },
+        "image": {
+          "properties": [
+            "imageLink",
+            "contentMode",
+            "altText"
+          ]
+        },
+        "text": {
+          "properties": [
+            "inputType",
+            "min",
+            "max",
+            "step"
+          ]
+        },
+        "boolean": {
+          "properties": [
+            "labelTrue",
+            "labelFalse"
+          ]
+        }
+      },
+      "generateOtherTab": false
+    }
+  },
+  "options": {
+    "pageEditMode": "standard",
+    "showSurveyHeader": true,
+    "showHeaderInEmptySurvey": false,
+    "useElementTitles": false,
+    "allowDragPages": true,
+    "allowZoom": true,
+    "expandCollapseButtonVisibility": "onhover",
+    "collapseQuestions": false,
+    "collapsePanels": false,
+    "collapsePages": false,
+    "maxRows": 0,
+    "maxColumns": 0,
+    "minChoices": 0,
+    "maxChoices": 0,
+    "maxVisibleChoices": 10,
+    "maxChoiceContentNestingLevel": 2,
+    "maxRateValues": 0,
+    "maxPanelNestingLevel": -1,
+    "expressionsValidateFunctions": true,
+    "expressionsValidateVariables": false,
+    "expressionsValidateSyntax": true,
+    "previewAllowSimulateDevices": true,
+    "previewDevice": "desktop",
+    "previewOrientation": "landscape",
+    "previewAllowSelectLanguage": "auto",
+    "previewAllowSelectPage": true,
+    "previewAllowHiddenElements": true,
+    "logicAllowTextEditExpressions": false,
+    "logicMaxItemsInCondition": -1,
+    "clearTranslationsOnSourceTextChange": false
+  },
+  "localization": {
+    "en": {
+      "qt": {
+        "email": "Email",
+        "tel": "Phone Number",
+        "date": "Date"
+      }
+    }
+  }
+}

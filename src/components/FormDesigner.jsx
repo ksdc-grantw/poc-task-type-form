@@ -1,40 +1,17 @@
 import { useEffect, useState } from 'react'
+import { UIPreset } from 'survey-creator-core'
 import { SurveyCreator, SurveyCreatorComponent } from 'survey-creator-react'
 import 'survey-core/survey-core.css'
 import 'survey-creator-core/survey-creator-core.css'
+import preset from '../config/preset.json'
 
-// Only question types the device can render. Image/file/signature types are left out
-// because they embed base64 content in the schema (see README).
-const QUESTION_TYPES = [
-  'text',
-  'comment',
-  'radiogroup',
-  'checkbox',
-  'dropdown',
-  'tagbox',
-  'boolean',
-  'rating',
-  'ranking',
-  // 'matrix',
-  // 'matrixdropdown',
-  // 'multipletext',
-  'panel',
-  // 'paneldynamic',
-  // 'expression',
-  // 'html',
-]
-
-const CREATOR_OPTIONS = {
-  questionTypes: QUESTION_TYPES,
-  showThemeTab: false,
-  showTranslationTab: false,
-  showJSONEditorTab: true,
-  collapseOnDrag: true,
-}
+// Tabs, toolbox, property grid and options all come from the UI preset.
+const uiPreset = new UIPreset(preset)
 
 export default function FormDesigner({ initialSchema, onChange }) {
   const [creator] = useState(() => {
-    const c = new SurveyCreator(CREATOR_OPTIONS)
+    const c = new SurveyCreator({ collapseOnDrag: true })
+    uiPreset.applyTo(c)
     if (initialSchema) c.JSON = initialSchema
     return c
   })
