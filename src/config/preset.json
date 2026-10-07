@@ -214,7 +214,7 @@
   },
   "options": {
     "pageEditMode": "standard",
-    "showSurveyHeader": true,
+    "showSurveyHeader": false,
     "showHeaderInEmptySurvey": false,
     "useElementTitles": false,
     "allowDragPages": true,

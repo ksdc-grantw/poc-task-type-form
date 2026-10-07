@@ -33,8 +33,36 @@ Live: https://ksdc-grantw.github.io/poc-task-type-form/ - deployed by `.github/w
 
 On update (`PUT`), `name` and `function` are omitted because they are locked. `form.version` increments only when the schema changes.
 
+## Form designer (Survey Creator)
+
+The Creator is wrapped in `src/components/FormDesigner.jsx`. Configuration is applied in this order when it is created:
+
+1. **Creator options** passed to `new SurveyCreator({...})`:
+   - `collapseOnDrag: true` - collapses elements while dragging.
+   - `showCreatorThemeSettings: false` - hides the **Creator Settings** (gear) button, so users can't change the Creator theme.
+2. **UI preset** from `src/config/preset.json`, applied with `new UIPreset(preset).applyTo(creator)`.
+3. **Creator theme** - `creator.applyCreatorTheme(PlainLight)` (from `survey-core/themes`) fixes the Creator UI to the Plain theme.
+4. **Saved schema** - `creator.JSON = initialSchema` when editing an existing form.
+
+### Custom UI preset (`src/config/preset.json`)
+
+A Survey Creator 3 UI preset (the format produced by the SurveyJS UI Preset Editor). It controls:
+
+- **Tabs** - only **Designer** and **Preview**. Logic, JSON editor, translations and themes are hidden.
+- **Toolbox** - Radio Button Group, Rating Scale, Slider, Checkboxes, Dropdown, Yes/No, File Upload, Single-Line Input, Email, Phone Number, Date, Long Text, Single-Select Matrix and Image. Email, Phone Number and Date are custom items: they create a `text` question with `inputType` set to `email`, `tel` or `date`.
+- **Property grid** - `autoGenerateProperties: false`, so only the properties listed per class are shown (for example `name`, `title`, `description`, `isRequired` on questions). The `survey` class lists no properties.
+- **Options** - designer behaviour. `showSurveyHeader: false` hides the survey title and description on the design surface, because the task type supplies those outside the form.
+- **Localization** - UI string overrides.
+
+To change which question types or properties are available, edit the preset rather than the component.
+
+### Themes
+
+- **Creator theme** (the designer UI) is fixed to Plain and can't be changed by users.
+- **Survey theme** (how the finished form looks when rendered) is separate (`creator.theme`). It isn't part of the saved schema or the payload; the rendering client chooses it.
+
 ## Notes
 
 - Survey Creator needs a commercial licence; without one, it shows a banner.
-- The Creator UI (tabs, toolbox, property grid) is configured by `src/config/preset.json`, applied with `UIPreset.applyTo()`.
 - The preset includes `file` and `image` questions, which embed base64 content in the schema/answers by default. Use `creator.onUploadFile` to store files externally if payload size matters.
+- Forms saved before `showSurveyHeader` was disabled may still contain `title`/`description` in their schema.
