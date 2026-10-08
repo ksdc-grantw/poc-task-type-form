@@ -1,5 +1,5 @@
 // Mock backend for task types, persisted in localStorage.
-const STORAGE_KEY = 'poc.taskTypes.v5'
+const STORAGE_KEY = 'poc.taskTypes.v7'
 
 export const FUNCTIONS = {
   PDF: 'PDF',
@@ -66,14 +66,6 @@ const SEED = [
                 title: 'Display type',
                 choices: ['Gondola end', 'Floor stand', 'Counter unit', 'Fridge branding'],
               },
-              {
-                type: 'slider',
-                name: 'facings',
-                title: 'Number of product facings on display',
-                min: 0,
-                max: 20,
-                step: 1,
-              },
               { type: 'file', name: 'displayPhoto', title: 'Photo of the display', photoOnly: true, acceptedCategories: ['image'] },
               { type: 'comment', name: 'reasonMissing', title: 'If the display is not set up, why not?' },
             ],
@@ -98,26 +90,12 @@ const SEED = [
             name: 'page1',
             elements: [
               {
-                type: 'matrix',
-                name: 'availability',
-                title: 'Stock level per product',
-                isRequired: true,
-                columns: [
-                  { value: 'in', text: 'In stock' },
-                  { value: 'low', text: 'Low' },
-                  { value: 'out', text: 'Out of stock' },
-                ],
-                rows: ['Cola 330ml', 'Cola 2L', 'Lemon 330ml', 'Water 500ml'],
-              },
-              {
                 type: 'radiogroup',
                 name: 'outOfStockCause',
                 title: 'Main cause of out-of-stocks',
                 choices: ['Not ordered', 'Delivery late', 'Stock in backroom', 'Delisted'],
                 showOtherItem: true,
               },
-              { type: 'text', name: 'nextDelivery', title: 'Next expected delivery', inputType: 'date' },
-              { type: 'text', name: 'managerEmail', title: 'Store manager email for follow-up', inputType: 'email' },
             ],
           },
         ],
@@ -139,7 +117,6 @@ const SEED = [
           {
             name: 'page1',
             elements: [
-              { type: 'rating', name: 'relationship', title: 'How satisfied is the store with our service?', rateMin: 1, rateMax: 5, isRequired: true },
               {
                 type: 'checkbox',
                 name: 'topics',
@@ -147,7 +124,6 @@ const SEED = [
                 choices: ['Pricing', 'Promotions', 'Deliveries', 'Merchandising', 'New products'],
               },
               { type: 'boolean', name: 'followUp', title: 'Does the store need a follow-up call?' },
-              { type: 'text', name: 'contactPhone', title: 'Contact number for follow-up (if needed)', inputType: 'tel' },
               { type: 'comment', name: 'notes', title: 'Other notes' },
             ],
           },
@@ -171,12 +147,6 @@ const SEED = [
             name: 'page1',
             elements: [
               {
-                type: 'html',
-                name: 'instructions',
-                html:
-                  '<h4>Photo guidelines</h4><ul><li>Take one photo per shelf bay, standing about 1 m back.</li><li>Make sure price tags are readable.</li><li>Only photograph customers who have given verbal consent.</li></ul>',
-              },
-              {
                 type: 'file',
                 name: 'shelfPhotos',
                 title: 'Shelf photos',
@@ -197,6 +167,39 @@ const SEED = [
                 sourceType: 'camera',
               },
               { type: 'comment', name: 'notes', title: 'Notes' },
+            ],
+          },
+        ],
+      },
+    },
+  },
+  {
+    id: 9,
+    name: 'Returns Bay Inspection',
+    function: 'FORM',
+    status: 'ACTIVE',
+    daysPriorToDueDate: 0,
+    daysToExpiry: 2,
+    form: {
+      version: 1,
+      surveyjsVersion: '3.2.0',
+      schema: {
+        pages: [
+          {
+            name: 'page1',
+            elements: [
+              {
+                type: 'file',
+                name: 'returnsBayPhotos',
+                title: 'Returns bay inspection',
+                description:
+                  'Photograph the whole returns bay, then take close-ups of: our products waiting to be returned (labels and expiry dates readable), damaged or leaking stock, expired stock still on the shelf, and any of our stock mixed in with other suppliers\' returns. Also photograph blocked access, a missing returns label, or a missing returns form.',
+                isRequired: true,
+                allowMultiple: true,
+                photoOnly: true,
+                acceptedCategories: ['image'],
+                sourceType: 'file-camera',
+              },
             ],
           },
         ],
