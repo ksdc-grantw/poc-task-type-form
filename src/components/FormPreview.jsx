@@ -5,7 +5,7 @@ import { Survey } from 'survey-react-ui'
 import { PlainLight } from 'survey-core/themes'
 import 'survey-core/survey-core.css'
 import { getTaskType } from '../api/taskTypes.js'
-import '../survey/photoOnly.js'
+import '../survey/customQuestions.js'
 
 function buildModel(schema) {
   const model = new Model(schema)

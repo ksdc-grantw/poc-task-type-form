@@ -6,7 +6,7 @@ import { PlainLight } from 'survey-core/themes'
 import 'survey-core/survey-core.css'
 import 'survey-creator-core/survey-creator-core.css'
 import preset from '../config/preset.json'
-import '../survey/photoOnly.js'
+import '../survey/customQuestions.js'
 
 // Tabs, toolbox, property grid and options all come from the UI preset.
 const uiPreset = new UIPreset(preset)
