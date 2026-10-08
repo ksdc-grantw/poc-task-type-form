@@ -23,7 +23,7 @@ SvgRegistry.registerIcon(
   '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 8.25H20V9.75H4ZM4 14.25H20V15.75H4ZM9.25 4H10.75L8.75 20H7.25ZM15.25 4H16.75L14.75 20H13.25Z"/></svg>',
 )
 
-export default function FormDesigner({ initialSchema, onChange }) {
+export default function FormDesigner({ initialSchema, initialTab, onChange }) {
   const [creator] = useState(() => {
     const c = new SurveyCreator({ collapseOnDrag: true, showCreatorThemeSettings: false })
     uiPreset.applyTo(c)
@@ -36,6 +36,8 @@ export default function FormDesigner({ initialSchema, onChange }) {
       }
     })
     if (initialSchema) c.JSON = initialSchema
+    // e.g. "preview" when opened from the list's "Open Preview" link.
+    if (initialTab) c.activeTab = initialTab
     return c
   })
 

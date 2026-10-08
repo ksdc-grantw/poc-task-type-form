@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 import { Version as SURVEYJS_VERSION } from 'survey-core'
 import {
   FUNCTIONS,
@@ -85,6 +85,8 @@ function Field({ label, children }) {
 
 export default function TaskTypeEditor() {
   const { id } = useParams()
+  const [searchParams] = useSearchParams()
+  const initialTab = searchParams.get('tab') ?? undefined
   const isNew = !id
   const navigate = useNavigate()
 
@@ -243,7 +245,7 @@ export default function TaskTypeEditor() {
         {isForm && (
           <div className="min-h-[600px] min-w-0 flex-1">
             <Suspense fallback={<p className="p-6 text-slate-400">Loading form designer...</p>}>
-              <FormDesigner initialSchema={schema ?? undefined} onChange={setSchema} />
+              <FormDesigner initialSchema={schema ?? undefined} initialTab={initialTab} onChange={setSchema} />
             </Suspense>
           </div>
         )}
