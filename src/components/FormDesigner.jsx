@@ -1,20 +1,16 @@
 import { useEffect, useState } from 'react'
-import { Serializer, SvgRegistry } from 'survey-core'
+import { SvgRegistry } from 'survey-core'
 import { UIPreset } from 'survey-creator-core'
 import { SurveyCreator, SurveyCreatorComponent } from 'survey-creator-react'
 import { PlainLight } from 'survey-core/themes'
 import 'survey-core/survey-core.css'
 import 'survey-creator-core/survey-creator-core.css'
 import preset from '../config/preset.json'
+import '../survey/photoOnly.js'
 
 // Tabs, toolbox, property grid and options all come from the UI preset.
 const uiPreset = new UIPreset(preset)
 
-// Marks a file question created from the "Photo" toolbox item. The flag is saved in the
-// schema so renderers can recognise photo fields; any renderer must register it too.
-if (!Serializer.findProperty('file', 'photoOnly')) {
-  Serializer.addProperty('file', { name: 'photoOnly:boolean', default: false, visible: false })
-}
 const PHOTO_LOCKED_PROPERTIES = ['acceptedCategories', 'acceptedTypes']
 
 // The Creator has no built-in number icon, so the "Number" toolbox item uses this "#" icon.

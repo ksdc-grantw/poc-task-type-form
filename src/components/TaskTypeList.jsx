@@ -96,7 +96,7 @@ export default function TaskTypeList() {
                 </td>
                 <td className="px-4 py-2 text-right whitespace-nowrap">
                   {t.form && (
-                    <Link to={`/task-types/${t.id}?tab=preview`} className="mr-4 text-blue-600 hover:underline">
+                    <Link to={`/task-types/${t.id}/preview`} className="mr-4 text-blue-600 hover:underline">
                       Open Preview
                     </Link>
                   )}

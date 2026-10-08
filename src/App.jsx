@@ -3,6 +3,7 @@ import { Link, Route, Routes } from 'react-router'
 import TaskTypeList from './components/TaskTypeList.jsx'
 
 const TaskTypeEditor = lazy(() => import('./components/TaskTypeEditor.jsx'))
+const FormPreview = lazy(() => import('./components/FormPreview.jsx'))
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           />
           <Route path="/task-types/new" element={<TaskTypeEditor />} />
           <Route path="/task-types/:id" element={<TaskTypeEditor />} />
+          <Route path="/task-types/:id/preview" element={<FormPreview />} />
         </Routes>
       </Suspense>
     </div>
