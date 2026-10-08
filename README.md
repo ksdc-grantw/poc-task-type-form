@@ -49,8 +49,11 @@ The Creator is wrapped in `src/components/FormDesigner.jsx`. Configuration is ap
 A Survey Creator 3 UI preset (the format produced by the SurveyJS UI Preset Editor). It controls:
 
 - **Tabs** - only **Designer** and **Preview**. Logic, JSON editor, translations and themes are hidden.
-- **Toolbox** - Radio Button Group, Rating Scale, Slider, Checkboxes, Dropdown, Yes/No, File Upload, Single-Line Input, Email, Phone Number, Date, Long Text, Single-Select Matrix, Image and Instructions. Email, Phone Number and Date are custom items: they create a `text` question with `inputType` set to `email`, `tel` or `date`. Instructions is the `html` element: a read-only block of formatted text (e.g. photo guidelines) edited through its `html` property.
-- **Property grid** - `autoGenerateProperties: false`, so only the properties listed per class are shown (for example `name`, `title`, `description`, `isRequired` on questions). The `survey` class lists no properties.
+- **Toolbox** - Single-Line Input, Number, Long Text, Checkboxes, Radio Button Group, Dropdown, Yes/No, then a separator and Photo. Number is a custom item that creates a `text` question with `inputType: "number"`; its "#" icon is registered with `SvgRegistry` in `FormDesigner.jsx` because the Creator has no built-in number icon. The Creator draws separators between toolbox categories, so Photo sits in its own `media` category. Photo is a custom `file` question preset to images (`acceptedCategories: ["image"]`) with `sourceType: "file-camera"`, so the agent can pick from the gallery or use the camera; `sourceType` can be changed to `file` or `camera` in the property grid. Photo questions also carry `photoOnly: true`, a custom property registered in `FormDesigner.jsx`; for these questions the accepted file categories/types are hidden in the property grid (`creator.onPropertyShowing`) so they stay images only. Any renderer must register `photoOnly` too (`Serializer.addProperty`). Seeded forms may still contain types that are no longer in the toolbox (rating, matrix, html, ...); they still render and edit, but can't be newly added.
+- **Property grid** - `autoGenerateProperties: false`, so only the properties listed per class are shown:
+  - Questions: `name`, `title`, `description`, `isRequired` plus type-specific properties such as `placeholder`, `choices`, `sourceType`.
+  - Survey settings: no properties are exposed.
+  - Conditional logic (`visibleIf`, `requiredIf`, ...) is deliberately not exposed.
 - **Options** - designer behaviour. `showSurveyHeader: false` hides the survey title and description on the design surface, because the task type supplies those outside the form. `previewDevice: "androidPhone"` and `previewOrientation: "portrait"` make the Preview tab default to a mobile portrait frame, matching how agents complete forms.
 - **Localization** - UI string overrides.
 
@@ -64,5 +67,5 @@ To change which question types or properties are available, edit the preset rath
 ## Notes
 
 - Survey Creator needs a commercial licence; without one, it shows a banner.
-- The preset includes `file` and `image` questions, which embed base64 content in the schema/answers by default. Use `creator.onUploadFile` to store files externally if payload size matters.
+- File Upload and Photo questions store uploaded files as base64 in the answers by default. Use `creator.onUploadFile` (and the equivalent on the rendering side) to store files externally if payload size matters.
 - Forms saved before `showSurveyHeader` was disabled may still contain `title`/`description` in their schema.

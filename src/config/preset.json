@@ -13,16 +13,26 @@
   "toolbox": {
     "definition": [
       {
-        "name": "radiogroup"
+        "name": "text",
+        "subitems": []
       },
       {
-        "name": "rating"
+        "name": "number",
+        "title": "Number",
+        "json": {
+          "type": "text",
+          "inputType": "number"
+        },
+        "iconName": "icon-toolbox-number-24x24"
       },
       {
-        "name": "slider"
+        "name": "comment"
       },
       {
         "name": "checkbox"
+      },
+      {
+        "name": "radiogroup"
       },
       {
         "name": "dropdown"
@@ -31,87 +41,36 @@
         "name": "boolean"
       },
       {
-        "name": "file"
-      },
-      {
-        "name": "text",
-        "subitems": []
-      },
-      {
-        "name": "email",
-        "title": "Email",
-        "iconName": "icon-toolbox-email-24x24",
+        "name": "photo",
+        "title": "Photo",
+        "iconName": "icon-toolbox-image-24x24",
         "json": {
-          "type": "text",
-          "inputType": "email"
+          "type": "file",
+          "photoOnly": true,
+          "acceptedCategories": [
+            "image"
+          ],
+          "sourceType": "file-camera"
         }
-      },
-      {
-        "name": "tel",
-        "title": "Phone Number",
-        "iconName": "icon-toolbox-phone-24x24",
-        "json": {
-          "type": "text",
-          "inputType": "tel"
-        }
-      },
-      {
-        "name": "date",
-        "title": "Date",
-        "iconName": "icon-toolbox-calendar-24x24",
-        "json": {
-          "type": "text",
-          "inputType": "date"
-        }
-      },
-      {
-        "name": "comment"
-      },
-      {
-        "name": "matrix"
-      },
-      {
-        "name": "image"
-      },
-      {
-        "name": "html",
-        "title": "Instructions"
       }
     ],
     "categories": [
       {
-        "category": "choice",
-        "items": [
-          "radiogroup",
-          "rating",
-          "slider",
-          "checkbox",
-          "dropdown",
-          "boolean",
-          "file"
-        ]
-      },
-      {
-        "category": "text",
+        "category": "general",
         "items": [
           "text",
-          "email",
-          "tel",
-          "date",
-          "comment"
+          "number",
+          "comment",
+          "checkbox",
+          "radiogroup",
+          "dropdown",
+          "boolean"
         ]
       },
       {
-        "category": "matrix",
+        "category": "media",
         "items": [
-          "matrix"
-        ]
-      },
-      {
-        "category": "misc",
-        "items": [
-          "image",
-          "html"
+          "photo"
         ]
       }
     ]
@@ -129,16 +88,18 @@
             "name",
             "title",
             "description",
-            "isRequired",
-            {
-              "name": "correctAnswer",
-              "index": 100000
-            }
+            "isRequired"
           ]
         },
         "comment": {
           "properties": [
+            "placeholder",
             "maxLength"
+          ]
+        },
+        "dropdown": {
+          "properties": [
+            "placeholder"
           ]
         },
         "file": {
@@ -148,36 +109,6 @@
             "acceptedCategories",
             "acceptedTypes",
             "maxSize"
-          ]
-        },
-        "matrix": {
-          "properties": [
-            "cellType",
-            "columns",
-            "rows",
-            "rowOrder",
-            "eachRowRequired",
-            "eachRowUnique"
-          ]
-        },
-        "rating": {
-          "properties": [
-            "rateType",
-            "rateMin",
-            "rateMax",
-            "rateStep",
-            "minRateDescription",
-            "maxRateDescription"
-          ]
-        },
-        "slider": {
-          "properties": [
-            "sliderType",
-            "min",
-            "max",
-            "step",
-            "minRangeLength",
-            "maxRangeLength"
           ]
         },
         "selectbase": {
@@ -193,21 +124,10 @@
             "showSelectAllItem"
           ]
         },
-        "image": {
-          "properties": [
-            "imageLink",
-            "contentMode",
-            "altText"
-          ]
-        },
-        "html": {
-          "properties": [
-            "html"
-          ]
-        },
         "text": {
           "properties": [
             "inputType",
+            "placeholder",
             "min",
             "max",
             "step"
@@ -257,10 +177,9 @@
   },
   "localization": {
     "en": {
-      "qt": {
-        "email": "Email",
-        "tel": "Phone Number",
-        "date": "Date"
+      "toolboxCategories": {
+        "general": "Questions",
+        "media": "Media"
       }
     }
   }
