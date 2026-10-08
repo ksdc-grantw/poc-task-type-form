@@ -4,8 +4,8 @@ import { Model } from 'survey-core'
 import { Survey } from 'survey-react-ui'
 import { PlainLight } from 'survey-core/themes'
 import 'survey-core/survey-core.css'
-import { getTaskType } from '../api/taskTypes.js'
-import '../survey/customQuestions.js'
+import { useEngine } from '../shared/EngineContext.js'
+import './customQuestions.js'
 
 function buildModel(schema) {
   const model = new Model(schema)
@@ -16,6 +16,7 @@ function buildModel(schema) {
 // Renders a FORM task type with the SurveyJS Form Library only (no Creator),
 // inside a phone-sized frame, the way an agent would see it on a device.
 export default function FormPreview() {
+  const { api, basePath } = useEngine()
   const { id } = useParams()
   const [taskType, setTaskType] = useState(null)
   const [model, setModel] = useState(null)
@@ -23,7 +24,8 @@ export default function FormPreview() {
 
   useEffect(() => {
     let cancelled = false
-    getTaskType(id)
+    api
+      .getTaskType(id)
       .then((record) => {
         if (cancelled) return
         if (!record.form?.schema) throw new Error('This task type has no form.')
@@ -34,7 +36,7 @@ export default function FormPreview() {
     return () => {
       cancelled = true
     }
-  }, [id])
+  }, [api, id])
 
   const restart = () => setModel(buildModel(taskType.form.schema))
 
@@ -42,7 +44,7 @@ export default function FormPreview() {
     <main className="mx-auto w-full max-w-5xl px-6 py-8">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <Link to="/" className="text-sm text-blue-600 hover:underline">
+          <Link to={basePath} className="text-sm text-blue-600 hover:underline">
             ← Task Types
           </Link>
           <h2 className="text-xl font-semibold">{taskType ? taskType.name : 'Preview'}</h2>
@@ -58,7 +60,7 @@ export default function FormPreview() {
               Restart
             </button>
             <Link
-              to={`/task-types/${id}`}
+              to={`${basePath}/task-types/${id}`}
               className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
             >
               Edit

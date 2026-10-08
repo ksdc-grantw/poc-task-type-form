@@ -24,7 +24,7 @@ Vite, React (plain JavaScript), Tailwind CSS v4, React Router, SurveyJS Survey C
 | Create and edit a FORM task type; the form is designed in the Survey Creator | `/task-types/new`, `/task-types/:id` |
 | Form saved as JSON and reopened for editing from the same payload | edit any FORM task type |
 | Payload preview (the request body for create/update) | **Show payload** in the editor |
-| Create/update rules: name and function locked after creation, form version increments only when the schema changes | editor + `src/api/taskTypes.js` |
+| Create/update rules: name and function locked after creation, form version increments only when the schema changes | `src/shared/TaskTypeEditor.jsx` + `src/shared/createTaskTypeApi.js` |
 | Seeded demo task types for different goals (compliance, stock check, feedback, photos, one-off instruction) | list |
 | Preview inside the designer, defaulting to mobile portrait | `?tab=preview` on the editor URL |
 | Standalone preview without the designer (Form Library only, phone-sized frame) | **Open Preview** in the list |
@@ -34,7 +34,7 @@ Vite, React (plain JavaScript), Tailwind CSS v4, React Router, SurveyJS Survey C
 
 ## The designer is a restricted Creator
 
-The Creator is configured for non-technical form authors through a UI preset (`src/config/preset.json`) plus a few event handlers in `FormDesigner.jsx`:
+The Creator is configured for non-technical form authors through a UI preset (`src/surveyjs/preset.json`) plus a few event handlers in `src/surveyjs/FormDesigner.jsx`:
 
 - **Tabs:** Designer and Preview only. No Logic, JSON editor, Translations or Themes tabs.
 - **Toolbox:** Single-Line Input, Long Text, Checkboxes, Radio Button Group, Dropdown and Yes/No, then a **Custom** group: Number, Photo, Product and Price Check.
@@ -81,14 +81,14 @@ A toolbox entry that creates a **built-in** question type with preset settings. 
 - **Saved as:** ordinary SurveyJS JSON (`{ "type": "text", "inputType": "number" }`).
 - **Device impact:** none. Any SurveyJS renderer already understands it.
 - **Cost:** low, a few lines of preset JSON, plus an icon if no built-in one fits (Number needed a custom icon).
-- **Limit:** after adding, authors can change the settings the property grid exposes. Photo has an extra hidden `photoOnly` flag, with the file-type settings hidden for it, so it stays images only. That flag is a custom property; renderers should register it (`src/survey/photoOnly.js`) to recognise a photo field.
+- **Limit:** after adding, authors can change the settings the property grid exposes. Photo has an extra hidden `photoOnly` flag, with the file-type settings hidden for it, so it stays images only. That flag is a custom property; renderers should register it (`src/surveyjs/photoOnly.js`) to recognise a photo field.
 
 ### 2. Specialized questions (Product)
 
 A **new question type** that wraps one built-in question with locked settings. Product is a dropdown whose choices are the (mock) product catalogue, defined once in code.
 
 - **Saved as:** `{ "type": "product" }`, with the answer being the product code.
-- **Device impact:** low to medium. The renderer must register the same definition (`src/survey/customQuestions.js`), or it can't draw the question.
+- **Device impact:** low to medium. The renderer must register the same definition (`src/surveyjs/customQuestions.js`), or it can't draw the question.
 - **Benefit:** the configuration lives in one place, so a catalogue change doesn't need every form edited, and authors can't misconfigure it.
 - **Next step:** load choices from the backend (`choicesByUrl`) instead of hard-coding them.
 

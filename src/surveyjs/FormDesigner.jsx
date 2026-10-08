@@ -5,8 +5,8 @@ import { SurveyCreator, SurveyCreatorComponent } from 'survey-creator-react'
 import { PlainLight } from 'survey-core/themes'
 import 'survey-core/survey-core.css'
 import 'survey-creator-core/survey-creator-core.css'
-import preset from '../config/preset.json'
-import '../survey/customQuestions.js'
+import preset from './preset.json'
+import './customQuestions.js'
 
 // Tabs, toolbox, property grid and options all come from the UI preset.
 const uiPreset = new UIPreset(preset)
