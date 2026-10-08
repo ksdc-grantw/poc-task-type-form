@@ -57,13 +57,17 @@ A Survey Creator 3 UI preset (the format produced by the SurveyJS UI Preset Edit
   - Product and Price Check are registered with `ComponentCollection` in `src/survey/customQuestions.js`, imported by both the designer and the preview page. Any renderer (e.g. the device app) must register the same definitions, or those questions are skipped.
   - Photo is a custom `file` question preset to images (`acceptedCategories: ["image"]`) with `sourceType: "file-camera"`, so the agent can pick from the gallery or use the camera; `sourceType` can be changed to `file` or `camera` in the property grid. Photo questions also carry `photoOnly: true`, a custom property registered in `src/survey/photoOnly.js` (imported by both the designer and the preview page); for these questions the accepted file categories/types are hidden in the property grid (`creator.onPropertyShowing`) so they stay images only. Any renderer must register `photoOnly` too (`Serializer.addProperty`).
 - **Property grid** - `autoGenerateProperties: false`, so only the properties listed per class are shown:
-  - Questions: `name`, `title`, `description`, `isRequired` plus type-specific properties such as `placeholder`, `choices`, `sourceType`.
+  - Questions: `title`, `description`, `isRequired` plus type-specific properties such as `placeholder`, `choices`, `sourceType`. `name` is deliberately not shown (see Question names below).
   - Survey settings: no properties are exposed.
   - Conditional logic (`visibleIf`, `requiredIf`, ...) is deliberately not exposed.
 - **Options** - designer behaviour. `showSurveyHeader: false` hides the survey title and description on the design surface, because the task type supplies those outside the form. `previewDevice: "androidPhone"` and `previewOrientation: "portrait"` make the Preview tab default to a mobile portrait frame, matching how agents complete forms.
 - **Localization** - UI string overrides.
 
 To change which question types or properties are available, edit the preset rather than the component.
+
+### Question names
+
+Each question's `name` is the key its answer is stored under, and reports use it, so it must never change or be reused. Form authors can't see or edit it. `FormDesigner.jsx` assigns a random ID (e.g. `q_8f3k2a9x`) when a question is added (`creator.onQuestionAdded`), including duplicates, and keeps the name when a question's type is converted. New questions also get the placeholder title "Enter question title" (otherwise the form would show the random name); duplicates keep their copied title and custom types such as Product keep their own default title. The designer's default (`question1`, `question2`, ...) is not used because it reuses the lowest free number after a delete. Names are unreadable on purpose: reports take labels and types from the form JSON saved with the task type. Existing seed forms keep their old names. The inner fields of composite questions (e.g. Price Check) have fixed names defined in `customQuestions.js`.
 
 ### Themes
 

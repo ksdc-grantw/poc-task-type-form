@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { SvgRegistry } from 'survey-core'
+import { ComponentCollection, SvgRegistry } from 'survey-core'
 import { UIPreset } from 'survey-creator-core'
 import { SurveyCreator, SurveyCreatorComponent } from 'survey-creator-react'
 import { PlainLight } from 'survey-core/themes'
@@ -12,6 +12,19 @@ import '../survey/customQuestions.js'
 const uiPreset = new UIPreset(preset)
 
 const PHOTO_LOCKED_PROPERTIES = ['acceptedCategories', 'acceptedTypes']
+
+// Question names are random IDs, generated once and never edited (the name field is hidden
+// in the preset). The designer's default (lowest unused number) reuses names after a
+// delete, which would let reports confuse an old question with a new one.
+const DEFAULT_TITLE = 'Enter question title'
+
+const newQuestionName = (taken) => {
+  let name
+  do {
+    name = `q_${Math.random().toString(36).slice(2, 10).padEnd(8, '0')}`
+  } while (taken.has(name))
+  return name
+}
 
 // The Creator has no built-in number icon, so the "Number" toolbox item uses this "#" icon.
 SvgRegistry.registerIcon(
@@ -32,6 +45,18 @@ export default function FormDesigner({ initialSchema, initialTab, onChange }) {
       }
     })
     if (initialSchema) c.JSON = initialSchema
+    // Converting a question's type keeps its name; every other way of adding gets a new ID
+    // (copies must not share their original's name).
+    c.onQuestionAdded.add((sender, options) => {
+      if (options.reason === 'ELEMENT_CONVERTED') return
+      const taken = new Set(sender.survey.getAllQuestions().map((q) => q.name))
+      const question = options.question
+      question.name = newQuestionName(taken)
+      // Without a title the form shows the (random) name. Custom types keep their own default title.
+      const isCopy = options.reason === 'ELEMENT_COPIED'
+      const isCustomType = !!ComponentCollection.Instance.getCustomQuestionByName(question.getType())
+      if (!isCopy && !isCustomType && !question.locTitle.getJson()) question.title = DEFAULT_TITLE
+    })
     // e.g. "preview" when opened from the list's "Open Preview" link.
     if (initialTab) c.activeTab = initialTab
     return c
