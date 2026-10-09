@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { FUNCTIONS, listTaskTypes, resetTaskTypes } from '../api/taskTypes.js'
+import { FUNCTIONS } from './constants.js'
+import { useEngine } from './EngineContext.js'
 
 function StatusBadge({ status }) {
   const active = status === 'ACTIVE'
@@ -22,15 +23,16 @@ function Content({ taskType }) {
 }
 
 export default function TaskTypeList() {
+  const { api, basePath } = useEngine()
   const [taskTypes, setTaskTypes] = useState(null)
 
   useEffect(() => {
-    listTaskTypes().then(setTaskTypes)
-  }, [])
+    api.listTaskTypes().then(setTaskTypes)
+  }, [api])
 
   const reset = () => {
     setTaskTypes(null)
-    resetTaskTypes().then(setTaskTypes)
+    api.resetTaskTypes().then(setTaskTypes)
   }
 
   return (
@@ -46,7 +48,7 @@ export default function TaskTypeList() {
             Reset mock data
           </button>
           <Link
-            to="/task-types/new"
+            to={`${basePath}/task-types/new`}
             className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
           >
             New Task Type
@@ -96,11 +98,11 @@ export default function TaskTypeList() {
                 </td>
                 <td className="px-4 py-2 text-right whitespace-nowrap">
                   {t.form && (
-                    <Link to={`/task-types/${t.id}/preview`} className="mr-4 text-blue-600 hover:underline">
+                    <Link to={`${basePath}/task-types/${t.id}/preview`} className="mr-4 text-blue-600 hover:underline">
                       Open Preview
                     </Link>
                   )}
-                  <Link to={`/task-types/${t.id}`} className="text-blue-600 hover:underline">
+                  <Link to={`${basePath}/task-types/${t.id}`} className="text-blue-600 hover:underline">
                     Edit
                   </Link>
                 </td>

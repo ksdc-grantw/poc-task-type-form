@@ -13,11 +13,23 @@ npm run lint
 
 Live: https://ksdc-grantw.github.io/poc-task-type-form/ - deployed by `.github/workflows/deploy.yml` on every push to `main`.
 
+## Project structure
+
+The app is split so a second form engine (e.g. Form.io) can sit beside SurveyJS without sharing data:
+
+- `src/shared/` - engine-agnostic: task type list and editor, the mock backend factory (`createTaskTypeApi`), constants, and the engine context. The form definition (`form.schema`) is opaque here.
+- `src/surveyjs/` - everything SurveyJS: `engine.js` (the adapter: API instance, lazy designer and preview, `countQuestions`, `buildForm`), the designer, preview, preset, custom questions and seed data.
+- `src/App.jsx` - header with one tab per engine; each engine is lazy-loaded under its own path.
+
+An engine is an object with `id`, `label`, `basePath`, `api`, `FormDesigner`, `FormPreview`, `countQuestions(schema)` and `buildForm(prevForm, schema)`. Each engine has its own `localStorage` key and seed data.
+
 ## Screens
 
-- `/` - task type list (mock backend in `src/api/taskTypes.js`, persisted to `localStorage`).
-- `/task-types/new`, `/task-types/:id` - task type editor. Picking the **Form** function shows the Survey Creator. **Show payload** previews the request body. Add `?tab=preview` to open the Creator on its Preview tab.
-- `/task-types/:id/preview` - **Open Preview** in the list. Renders the saved form with the SurveyJS Form Library only (`survey-react-ui`, no Creator) inside a phone-sized frame, the way an agent would see it.
+Under the engine base path (`/surveyjs`; `/` redirects there):
+
+- `/surveyjs` - task type list (mock backend from `src/shared/createTaskTypeApi.js`, persisted to `localStorage`).
+- `/surveyjs/task-types/new`, `/surveyjs/task-types/:id` - task type editor. Picking the **Form** function shows the Survey Creator. **Show payload** previews the request body. Add `?tab=preview` to open the Creator on its Preview tab.
+- `/surveyjs/task-types/:id/preview` - **Open Preview** in the list. Renders the saved form with the SurveyJS Form Library only (`survey-react-ui`, no Creator) inside a phone-sized frame, the way an agent would see it.
 
 ## Payload
 
@@ -36,26 +48,26 @@ On update (`PUT`), `name` and `function` are omitted because they are locked. `f
 
 ## Form designer (Survey Creator)
 
-The Creator is wrapped in `src/components/FormDesigner.jsx`. Configuration is applied in this order when it is created:
+The Creator is wrapped in `src/surveyjs/FormDesigner.jsx`. Configuration is applied in this order when it is created:
 
 1. **Creator options** passed to `new SurveyCreator({...})`:
    - `collapseOnDrag: true` - collapses elements while dragging.
    - `showCreatorThemeSettings: false` - hides the **Creator Settings** (gear) button, so users can't change the Creator theme.
-2. **UI preset** from `src/config/preset.json`, applied with `new UIPreset(preset).applyTo(creator)`.
+2. **UI preset** from `src/surveyjs/preset.json`, applied with `new UIPreset(preset).applyTo(creator)`.
 3. **Creator theme** - `creator.applyCreatorTheme(PlainLight)` (from `survey-core/themes`) fixes the Creator UI to the Plain theme.
 4. **Saved schema** - `creator.JSON = initialSchema` when editing an existing form.
 
-### Custom UI preset (`src/config/preset.json`)
+### Custom UI preset (`src/surveyjs/preset.json`)
 
 A Survey Creator 3 UI preset (the format produced by the SurveyJS UI Preset Editor). It controls:
 
 - **Tabs** - only **Designer** and **Preview**. Logic, JSON editor, translations and themes are hidden.
 - **Toolbox** - two categories, separated by a line: **Questions** (Single-Line Input, Long Text, Checkboxes, Radio Button Group, Dropdown, Yes/No) and **Custom** (Number, Photo, Product, Price Check). The custom items show the three ways to extend the toolbox:
-  - *Preset items* (Number, Photo) - a toolbox entry with preset JSON for a built-in type. Number creates a `text` question with `inputType: "number"`; its "#" icon is registered with `SvgRegistry` in `FormDesigner.jsx` because the Creator has no built-in number icon.
+  - *Preset items* (Number, Photo) - a toolbox entry with preset JSON for a built-in type. Number creates a `text` question with `inputType: "number"`; its "#" icon is registered with `SvgRegistry` in `src/surveyjs/FormDesigner.jsx` because the Creator has no built-in number icon.
   - *Specialized question* (Product) - a new type `product` that wraps a dropdown with the (mock) product catalogue as fixed choices. Saved as `{ "type": "product" }`; the answer is the product code.
   - *Composite question* (Price Check) - a new type `pricecheck` that groups product, shelf price, promo price and "price tag correct?" into one question. Saved as `{ "type": "pricecheck" }`; the answer is `{ product, shelfPrice, promoPrice, tagCorrect }`.
-  - Product and Price Check are registered with `ComponentCollection` in `src/survey/customQuestions.js`, imported by both the designer and the preview page. Any renderer (e.g. the device app) must register the same definitions, or those questions are skipped.
-  - Photo is a custom `file` question preset to images (`acceptedCategories: ["image"]`) with `sourceType: "file-camera"`, so the agent can pick from the gallery or use the camera; `sourceType` can be changed to `file` or `camera` in the property grid. Photo questions also carry `photoOnly: true`, a custom property registered in `src/survey/photoOnly.js` (imported by both the designer and the preview page); for these questions the accepted file categories/types are hidden in the property grid (`creator.onPropertyShowing`) so they stay images only. Any renderer must register `photoOnly` too (`Serializer.addProperty`).
+  - Product and Price Check are registered with `ComponentCollection` in `src/surveyjs/customQuestions.js`, imported by both the designer and the preview page. Any renderer (e.g. the device app) must register the same definitions, or those questions are skipped.
+  - Photo is a custom `file` question preset to images (`acceptedCategories: ["image"]`) with `sourceType: "file-camera"`, so the agent can pick from the gallery or use the camera; `sourceType` can be changed to `file` or `camera` in the property grid. Photo questions also carry `photoOnly: true`, a custom property registered in `src/surveyjs/photoOnly.js` (imported by both the designer and the preview page); for these questions the accepted file categories/types are hidden in the property grid (`creator.onPropertyShowing`) so they stay images only. Any renderer must register `photoOnly` too (`Serializer.addProperty`).
 - **Property grid** - `autoGenerateProperties: false`, so only the properties listed per class are shown:
   - Questions: `title`, `description`, `isRequired` plus type-specific properties such as `placeholder`, `choices`, `sourceType`. `name` is deliberately not shown (see Question names below).
   - Survey settings: no properties are exposed.
@@ -67,7 +79,7 @@ To change which question types or properties are available, edit the preset rath
 
 ### Question names
 
-Each question's `name` is the key its answer is stored under, and reports use it, so it must never change or be reused. Form authors can't see or edit it. `FormDesigner.jsx` assigns a random ID (e.g. `q_8f3k2a9x`) when a question is added (`creator.onQuestionAdded`), including duplicates, and keeps the name when a question's type is converted. New questions also get the placeholder title "Enter question title" (otherwise the form would show the random name); duplicates keep their copied title and custom types such as Product keep their own default title. The designer's default (`question1`, `question2`, ...) is not used because it reuses the lowest free number after a delete. Names are unreadable on purpose: reports take labels and types from the form JSON saved with the task type. Existing seed forms keep their old names. The inner fields of composite questions (e.g. Price Check) have fixed names defined in `customQuestions.js`.
+Each question's `name` is the key its answer is stored under, and reports use it, so it must never change or be reused. Form authors can't see or edit it. `src/surveyjs/FormDesigner.jsx` assigns a random ID (e.g. `q_8f3k2a9x`) when a question is added (`creator.onQuestionAdded`), including duplicates, and keeps the name when a question's type is converted. New questions also get the placeholder title "Enter question title" (otherwise the form would show the random name); duplicates keep their copied title and custom types such as Product keep their own default title. The designer's default (`question1`, `question2`, ...) is not used because it reuses the lowest free number after a delete. Names are unreadable on purpose: reports take labels and types from the form JSON saved with the task type. Existing seed forms keep their old names. The inner fields of composite questions (e.g. Price Check) have fixed names defined in `customQuestions.js`.
 
 ### Themes
 
