@@ -26,6 +26,14 @@ export default function App() {
                 {e.label}
               </NavLink>
             ))}
+            <a
+              href="https://github.com/ksdc-grantw/poc-task-type-form"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded px-3 py-1.5 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+            >
+              GitHub ↗
+            </a>
           </nav>
         </div>
       </header>

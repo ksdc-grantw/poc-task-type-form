@@ -11,7 +11,7 @@ npm run build
 npm run lint
 ```
 
-Live: https://ksdc-grantw.github.io/poc-task-type-form/ - deployed by `.github/workflows/deploy.yml` on every push to `main`.
+Live POC: https://ksdc-grantw.github.io/poc-task-type-form/ - deployed by `.github/workflows/deploy.yml` on every push to `main`.
 
 ## Project structure
 
