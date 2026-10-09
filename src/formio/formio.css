@@ -1,0 +1,4 @@
+/* Bootstrap and Form.io styles live in the "formio" cascade layer, which sits below Tailwind's
+   utilities, so they can't override the shell's own classes. */
+@import 'bootstrap/dist/css/bootstrap.min.css' layer(formio);
+@import '@formio/js/dist/formio.full.min.css' layer(formio);

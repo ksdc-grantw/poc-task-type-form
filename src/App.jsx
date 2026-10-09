@@ -4,6 +4,7 @@ import { Link, NavLink, Navigate, Route, Routes } from 'react-router'
 // One entry per form engine. Each is a self-contained app mounted under its own path.
 const ENGINES = [
   { id: 'surveyjs', label: 'SurveyJS', path: '/surveyjs', App: lazy(() => import('./surveyjs/SurveyJsApp.jsx')) },
+  { id: 'formio', label: 'Form.io', path: '/formio', App: lazy(() => import('./formio/FormioApp.jsx')) },
 ]
 
 const tabCls = ({ isActive }) =>
