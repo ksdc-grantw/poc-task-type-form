@@ -9,6 +9,7 @@ const ENGINES = [
 ]
 
 const AgentTemplatesApp = lazy(() => import('./agentTemplates/AgentTemplatesApp.jsx'))
+const TasksApp = lazy(() => import('./tasks/TasksApp.jsx'))
 
 const tabCls = ({ isActive }) =>
   `rounded-md px-3 py-1.5 text-sm font-medium ${
@@ -40,6 +41,9 @@ export default function App() {
                 </NavLink>
               ),
             )}
+            <NavLink to="/tasks" className={tabCls}>
+              Tasks
+            </NavLink>
             <NavLink to="/agent-templates" end className={tabCls}>
               Agent Templates
             </NavLink>
@@ -63,6 +67,7 @@ export default function App() {
           {ENGINES.map(({ id, path, App: EngineApp }) => (
             <Route key={id} path={`${path}/*`} element={<EngineApp />} />
           ))}
+          <Route path="/tasks/*" element={<TasksApp />} />
           <Route path="/agent-templates/*" element={<AgentTemplatesApp />} />
         </Routes>
       </Suspense>

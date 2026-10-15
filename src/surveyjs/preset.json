@@ -95,7 +95,9 @@
           "properties": [
             "title",
             "description",
-            "isRequired"
+            "isRequired",
+            "productScope",
+            "productRef"
           ]
         },
         "comment": {

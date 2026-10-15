@@ -3,8 +3,9 @@ export const FUNCTIONS = {
   PHOTO: 'Take Photo',
   LOCATION: 'Save Location',
   ORDPAD: 'Order Pad',
+  TEMPLATE: 'Template',
   FORM: 'Form',
 }
 
 // Only one task type of each of these functions may exist; the name is fixed to the label.
-export const SINGLE_INSTANCE = ['LOCATION', 'ORDPAD']
+export const SINGLE_INSTANCE = ['LOCATION', 'ORDPAD', 'TEMPLATE']

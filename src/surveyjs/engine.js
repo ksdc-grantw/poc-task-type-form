@@ -3,7 +3,7 @@ import { Version as SURVEYJS_VERSION } from 'survey-core'
 import { createTaskTypeApi } from '../shared/createTaskTypeApi.js'
 import { SEED } from './seed.js'
 
-const api = createTaskTypeApi({ storageKey: 'poc.taskTypes.v7', seed: SEED })
+const api = createTaskTypeApi({ storageKey: 'poc.taskTypes.v10', seed: SEED })
 
 function countQuestions(schema) {
   const walk = (elements = []) =>
