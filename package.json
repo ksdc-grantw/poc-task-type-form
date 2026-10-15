@@ -17,6 +17,7 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router": "^8.4.0",
+    "survey-analytics": "^3.2.1",
     "survey-core": "^3.2.0",
     "survey-creator-core": "^3.2.0",
     "survey-creator-react": "^3.2.0",

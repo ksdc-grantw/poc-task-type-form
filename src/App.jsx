@@ -4,8 +4,11 @@ import { Link, NavLink, Navigate, Route, Routes } from 'react-router'
 // One entry per form engine. Each is a self-contained app mounted under its own path.
 const ENGINES = [
   { id: 'surveyjs', label: 'SurveyJS', path: '/surveyjs', App: lazy(() => import('./surveyjs/SurveyJsApp.jsx')) },
-  { id: 'formio', label: 'Form.io', path: '/formio', App: lazy(() => import('./formio/FormioApp.jsx')) },
+  // Not chosen: kept in place but its tab is disabled.
+  { id: 'formio', label: 'Form.io', path: '/formio', disabled: true, App: lazy(() => import('./formio/FormioApp.jsx')) },
 ]
+
+const AgentTemplatesApp = lazy(() => import('./agentTemplates/AgentTemplatesApp.jsx'))
 
 const tabCls = ({ isActive }) =>
   `rounded-md px-3 py-1.5 text-sm font-medium ${
@@ -21,11 +24,28 @@ export default function App() {
             poc-form-task-type
           </Link>
           <nav className="flex gap-1">
-            {ENGINES.map((e) => (
-              <NavLink key={e.id} to={e.path} className={tabCls}>
-                {e.label}
-              </NavLink>
-            ))}
+            {ENGINES.map((e) =>
+              e.disabled ? (
+                <span
+                  key={e.id}
+                  aria-disabled="true"
+                  title="Not selected"
+                  className="cursor-not-allowed rounded-md px-3 py-1.5 text-sm font-medium text-slate-300"
+                >
+                  {e.label}
+                </span>
+              ) : (
+                <NavLink key={e.id} to={e.path} className={tabCls}>
+                  {e.label}
+                </NavLink>
+              ),
+            )}
+            <NavLink to="/agent-templates" end className={tabCls}>
+              Agent Templates
+            </NavLink>
+            <NavLink to="/agent-templates/dashboard" className={tabCls}>
+              Dashboard
+            </NavLink>
             <a
               href="https://github.com/ksdc-grantw/poc-task-type-form"
               target="_blank"
@@ -43,6 +63,7 @@ export default function App() {
           {ENGINES.map(({ id, path, App: EngineApp }) => (
             <Route key={id} path={`${path}/*`} element={<EngineApp />} />
           ))}
+          <Route path="/agent-templates/*" element={<AgentTemplatesApp />} />
         </Routes>
       </Suspense>
     </div>

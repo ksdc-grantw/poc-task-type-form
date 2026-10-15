@@ -25,6 +25,11 @@ An engine is an object with `id`, `label`, `basePath`, `api`, `FormDesigner`, `F
 
 ## Screens
 
+Agent Templates and the Work Events dashboard (concept: `docs/concepts/ad-hoc-work-events.md`, implementation: `docs/concepts/agent-templates-and-dashboard.md`):
+
+- `/agent-templates` - list of Agent Templates, with Open Preview and Edit. Code in `src/agentTemplates/`.
+- `/agent-templates/dashboard` - SurveyJS Dashboard (`survey-analytics`) of mock Work Events with Template, Site, Agent and Date filters.
+
 Under the engine base path (`/surveyjs`; `/` redirects there):
 
 - `/surveyjs` - task type list (mock backend from `src/shared/createTaskTypeApi.js`, persisted to `localStorage`).
@@ -40,7 +45,7 @@ Under the engine base path (`/surveyjs`; `/` redirects there):
   "status": "ACTIVE",
   "daysPriorToDueDate": 0,
   "daysToExpiry": 0,
-  "form": { "version": 1, "surveyjsVersion": "3.2.0", "schema": { "pages": [] } }
+  "form": { "version": 1, "engine": "surveyjs", "surveyjsVersion": "3.2.0", "schema": { "pages": [] } }
 }
 ```
 

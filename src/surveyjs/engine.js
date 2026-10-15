@@ -20,6 +20,7 @@ function buildForm(prev, schema) {
   const changed = !prev || JSON.stringify(prev.schema) !== JSON.stringify(schema)
   return {
     version: prev ? prev.version + (changed ? 1 : 0) : 1,
+    engine: 'surveyjs',
     surveyjsVersion: SURVEYJS_VERSION,
     schema,
   }
