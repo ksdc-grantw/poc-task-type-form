@@ -96,7 +96,6 @@
             "title",
             "description",
             "isRequired",
-            "productScope",
             "productRef"
           ]
         },

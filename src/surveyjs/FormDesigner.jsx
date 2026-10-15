@@ -7,6 +7,9 @@ import 'survey-core/survey-core.css'
 import 'survey-creator-core/survey-creator-core.css'
 import preset from './preset.json'
 import './customQuestions.js'
+import './productRefEditor.js'
+import ProductPickerModal from '../products/ProductPickerModal.jsx'
+import { makeRef } from '../products/productApi.js'
 
 // Tabs, toolbox, property grid and options all come from the UI preset.
 const uiPreset = new UIPreset(preset)
@@ -32,10 +35,24 @@ SvgRegistry.registerIcon(
   '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 8.25H20V9.75H4ZM4 14.25H20V15.75H4ZM9.25 4H10.75L8.75 20H7.25ZM15.25 4H16.75L14.75 20H13.25Z"/></svg>',
 )
 
+const setProductRef = (question, id) => {
+  question.productRef = id
+}
+
 export default function FormDesigner({ initialSchema, initialTab, onChange }) {
+  // The question whose default product is being chosen in the modal.
+  const [pickerQuestion, setPickerQuestion] = useState(null)
   const [creator] = useState(() => {
     const c = new SurveyCreator({ collapseOnDrag: true, showCreatorThemeSettings: false })
     uiPreset.applyTo(c)
+    c.onPropertyEditorUpdateTitleActions.add((_, options) => {
+      if (options.property.name !== 'productRef') return
+      const question = options.obj
+      options.titleActions.push(
+        { id: 'select-product', title: 'Select...', action: () => setPickerQuestion(question) },
+        { id: 'clear-product', title: 'Clear', action: () => (question.productRef = '') },
+      )
+    })
     // Fixed Creator UI theme; the "Creator Settings" (gear) button is hidden above.
     c.applyCreatorTheme(PlainLight)
     // Photo questions are always images only, so hide the file-type settings for them.
@@ -72,6 +89,16 @@ export default function FormDesigner({ initialSchema, initialTab, onChange }) {
   return (
     <div className="h-full w-full">
       <SurveyCreatorComponent creator={creator} />
+      {pickerQuestion && (
+        <ProductPickerModal
+          initialRef={pickerQuestion.productRef}
+          onClose={() => setPickerQuestion(null)}
+          onSelect={(p) => {
+            setProductRef(pickerQuestion, makeRef(p))
+            setPickerQuestion(null)
+          }}
+        />
+      )}
     </div>
   )
 }

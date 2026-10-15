@@ -42,6 +42,7 @@ const items = {
     id: l.id,
     name: l.name,
     level: 'line',
+    parentId: l.categoryId,
     path: `${categoryById[l.categoryId].name} › ${l.name}`,
   })),
   product: PRODUCTS.map((p) => {
@@ -50,6 +51,7 @@ const items = {
       id: p.id,
       name: p.name,
       level: 'product',
+      parentId: p.lineId,
       path: `${categoryById[line.categoryId].name} › ${line.name} › ${p.name}`,
     }
   }),
@@ -68,3 +70,18 @@ export const productApi = {
 // need a searchable async editor instead.
 export const listByLevel = (level) => items[level] ?? []
 export const findProduct = (level, id) => listByLevel(level).find((i) => i.id === id)
+
+// A form stores its product as "level:id", e.g. "product:sku-1000" or "category:cat-snacks".
+// Number of products at or beneath an item in the hierarchy.
+export const countProducts = (item) => {
+  if (!item) return 0
+  if (item.level === 'product') return 1
+  const lines = item.level === 'line' ? [item] : listByLevel('line').filter((l) => l.parentId === item.id)
+  return listByLevel('product').filter((p) => lines.some((l) => l.id === p.parentId)).length
+}
+
+export const makeRef = (item) => `${item.level}:${item.id}`
+export const resolveRef = (ref) => {
+  const [level, id] = (ref ?? '').split(':')
+  return level && id ? findProduct(level, id) : undefined
+}
