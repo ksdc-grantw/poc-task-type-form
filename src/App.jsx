@@ -3,8 +3,8 @@ import { Link, NavLink, Navigate, Route, Routes } from 'react-router'
 
 // One entry per form engine. Each is a self-contained app mounted under its own path.
 const ENGINES = [
-  { id: 'surveyjs', label: 'SurveyJS', path: '/surveyjs', App: lazy(() => import('./surveyjs/SurveyJsApp.jsx')) },
-  // Not chosen: kept in place but its tab is disabled.
+  { id: 'surveyjs', label: 'Task Types', path: '/surveyjs', App: lazy(() => import('./surveyjs/SurveyJsApp.jsx')) },
+  // Not chosen: kept in place but hidden from the nav.
   { id: 'formio', label: 'Form.io', path: '/formio', disabled: true, App: lazy(() => import('./formio/FormioApp.jsx')) },
 ]
 
@@ -25,22 +25,11 @@ export default function App() {
             poc-form-task-type
           </Link>
           <nav className="flex gap-1">
-            {ENGINES.map((e) =>
-              e.disabled ? (
-                <span
-                  key={e.id}
-                  aria-disabled="true"
-                  title="Not selected"
-                  className="cursor-not-allowed rounded-md px-3 py-1.5 text-sm font-medium text-slate-300"
-                >
-                  {e.label}
-                </span>
-              ) : (
-                <NavLink key={e.id} to={e.path} className={tabCls}>
-                  {e.label}
-                </NavLink>
-              ),
-            )}
+            {ENGINES.filter((e) => !e.disabled).map((e) => (
+              <NavLink key={e.id} to={e.path} className={tabCls}>
+                {e.label}
+              </NavLink>
+            ))}
             <NavLink to="/tasks" className={tabCls}>
               Tasks
             </NavLink>
