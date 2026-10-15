@@ -25,8 +25,10 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
+    "@types/plotly.js-dist-min": "^2.3.4",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
+    "@types/tabulator-tables": "^6.3.6",
     "@vitejs/plugin-react": "^6.1.1",
     "jquery": "^3.7.1",
     "oxlint": "^1.81.0",
