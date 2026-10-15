@@ -85,3 +85,23 @@ export const resolveRef = (ref) => {
   const [level, id] = (ref ?? '').split(':')
   return level && id ? findProduct(level, id) : undefined
 }
+
+// A question stores a set of items as an array of refs, e.g. ["product:sku-1000", "line:line-chips"].
+export const parseRefs = (refs) => (refs ?? []).map(resolveRef).filter(Boolean)
+export const makeRefs = (items) => items.map(makeRef)
+
+// Every distinct product at or beneath the given items.
+export const expandProducts = (selected) => {
+  const products = new Map()
+  for (const item of selected) {
+    const lines = item.level === 'line' ? [item] : listByLevel('line').filter((l) => l.parentId === item.id)
+    const under =
+      item.level === 'product'
+        ? [item]
+        : listByLevel('product').filter((p) => lines.some((l) => l.id === p.parentId))
+    under.forEach((p) => products.set(p.id, p))
+  }
+  return [...products.values()]
+}
+
+export const toSnapshot = ({ level, id, name, path }) => ({ level, id, name, path })

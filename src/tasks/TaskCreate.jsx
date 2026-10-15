@@ -2,10 +2,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import engine from '../surveyjs/engine.js'
 import ProductPicker from './ProductPicker.jsx'
+import { expandProducts, toSnapshot } from '../products/productApi.js'
 import { productQuestions } from './productQuestions.js'
 import { taskApi } from './taskApi.js'
 
-const LEVEL_LABEL = { product: 'Product', line: 'Product line', category: 'Category' }
+const MODE_LABEL = { single: 'One answer for all products', each: 'Repeated for each product' }
 
 export default function TaskCreate() {
   const navigate = useNavigate()
@@ -30,20 +31,32 @@ export default function TaskCreate() {
     setError(null)
     const next = taskTypes?.find((t) => t.id === Number(id))
     const defaults = next?.form?.schema ? productQuestions(next.form.schema) : []
-    setBindings(Object.fromEntries(defaults.filter((q) => q.defaultProduct).map((q) => [q.name, q.defaultProduct])))
+    setBindings(Object.fromEntries(defaults.map((q) => [q.name, q.defaultItems])))
   }
 
   const save = async () => {
-    const missing = questions.filter((q) => !bindings[q.name])
+    const missing = questions.filter((q) => !bindings[q.name]?.length)
     if (!taskType) return setError('Choose a task type')
-    if (missing.length) return setError(`Choose a ${missing.length === 1 ? 'product' : 'product for each question'}: ${missing.map((q) => q.title).join(', ')}`)
+    if (missing.length) return setError(`Choose products for: ${missing.map((q) => q.title).join(', ')}`)
     setSaving(true)
     try {
+      // Snapshot the items and the products they expand to, so the Task doesn't change
+      // if the catalogue does.
+      const productBindings = Object.fromEntries(
+        questions.map((q) => [
+          q.name,
+          {
+            mode: q.mode,
+            items: bindings[q.name].map(toSnapshot),
+            products: expandProducts(bindings[q.name]).map(toSnapshot),
+          },
+        ]),
+      )
       await taskApi.create({
         taskTypeId: taskType.id,
         taskTypeName: taskType.name,
         formVersion: taskType.form?.version ?? null,
-        productBindings: bindings,
+        productBindings,
       })
       navigate('/tasks')
     } catch (e) {
@@ -83,21 +96,17 @@ export default function TaskCreate() {
         {questions.length > 0 && (
           <div className="space-y-4">
             <p className="text-sm text-slate-500">
-              These questions relate to a product. Choose which one each applies to for this Task.
+              These questions relate to products. Choose which ones each applies to for this Task.
             </p>
             {questions.map((q) => (
               <div key={q.name}>
                 <p className="mb-1 text-sm font-medium">
                   {q.title}
                   <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-normal text-slate-600">
-                    {LEVEL_LABEL[q.level]}
+                    {MODE_LABEL[q.mode]}
                   </span>
-                  {q.defaultProduct && bindings[q.name]?.id === q.defaultProduct.id && (
-                    <span className="ml-2 text-xs font-normal text-slate-500">default from form</span>
-                  )}
                 </p>
                 <ProductPicker
-                  level={q.level}
                   value={bindings[q.name]}
                   onChange={(v) => setBindings((b) => ({ ...b, [q.name]: v }))}
                 />

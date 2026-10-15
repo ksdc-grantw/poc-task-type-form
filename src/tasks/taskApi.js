@@ -1,11 +1,13 @@
-const KEY = 'poc.tasks.v1'
+const KEY = 'poc.tasks.v4'
 const delay = (ms = 150) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const read = () => JSON.parse(localStorage.getItem(KEY) ?? '[]')
 const write = (tasks) => localStorage.setItem(KEY, JSON.stringify(tasks))
 
 // Mock backend for Tasks. A Task is a task type plus (for FORM types) the product chosen
-// for each product-specific question: productBindings[questionName] = { level, id, name, path }.
+// for each product-specific question:
+// productBindings[questionName] = { mode: 'single' | 'each', items: [...], products: [...] }
+// where items are what was chosen and products is the snapshot they expand to.
 export const taskApi = {
   async list() {
     await delay()

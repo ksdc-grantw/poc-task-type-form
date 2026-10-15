@@ -72,7 +72,10 @@ export default function TaskList() {
                       <ul className="space-y-0.5">
                         {bound.map((b, i) => (
                           <li key={i}>
-                            {b.name} <span className="text-slate-400">({b.level})</span>
+                            {b.items.map((x) => x.name).join(', ')}{' '}
+                            <span className="text-slate-400">
+                              ({b.products.length} product{b.products.length === 1 ? '' : 's'}, {b.mode})
+                            </span>
                           </li>
                         ))}
                       </ul>

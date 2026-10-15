@@ -96,7 +96,8 @@
             "title",
             "description",
             "isRequired",
-            "productRef"
+            "productRefs",
+            "productMode"
           ]
         },
         "comment": {

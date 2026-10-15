@@ -8,14 +8,44 @@ import engine from '../surveyjs/engine.js'
 import '../surveyjs/customQuestions.js'
 import { taskApi } from './taskApi.js'
 
-// The task type's form with each product-specific question labelled with the product
-// chosen for this Task, as the agent would see it on the device.
-function buildModel(schema, bindings) {
-  const model = new Model(schema)
+// The form as the agent would see it on the device. A "single" product question is labelled
+// with its products; an "each" question becomes a locked dynamic panel with one panel per product.
+function transformElements(elements, bindings) {
+  return (elements ?? []).map((el) => {
+    const binding = bindings[el.name]
+    if (el.elements) return { ...el, elements: transformElements(el.elements, bindings) }
+    if (!binding) return el
+    // eslint-disable-next-line no-unused-vars
+    const { productRefs, productMode, ...rest } = el
+    if (binding.mode === 'each') {
+      return {
+        type: 'paneldynamic',
+        name: el.name,
+        title: el.title,
+        description: el.description,
+        isRequired: el.isRequired,
+        templateTitle: '{panel.productName}',
+        templateElements: [{ ...rest, name: 'answer', title: 'Answer', description: undefined, isRequired: el.isRequired }],
+        panelCount: binding.products.length,
+        minPanelCount: binding.products.length,
+        maxPanelCount: binding.products.length,
+        allowAddPanel: false,
+        allowRemovePanel: false,
+      }
+    }
+    const names = binding.products.map((p) => p.name).join(', ')
+    return { ...rest, description: [`Products: ${names}`, el.description].filter(Boolean).join('\n') }
+  })
+}
+
+function buildModel(schema, bindings = {}) {
+  const pages = (schema.pages ?? []).map((p) => ({ ...p, elements: transformElements(p.elements, bindings) }))
+  const model = new Model({ ...schema, pages })
   model.applyTheme(PlainLight)
-  for (const [name, product] of Object.entries(bindings ?? {})) {
-    const question = model.getQuestionByName(name)
-    if (question) question.description = [`Product: ${product.path}`, question.description].filter(Boolean).join('\n')
+  for (const [name, b] of Object.entries(bindings)) {
+    if (b.mode === 'each') {
+      model.setValue(name, b.products.map((p) => ({ productId: p.id, productName: p.path })))
+    }
   }
   return model
 }
