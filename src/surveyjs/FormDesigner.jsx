@@ -36,6 +36,11 @@ SvgRegistry.registerIcon(
   '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 8.25H20V9.75H4ZM4 14.25H20V15.75H4ZM9.25 4H10.75L8.75 20H7.25ZM15.25 4H16.75L14.75 20H13.25Z"/></svg>',
 )
 
+const clearProductRefs = (question) => {
+  question.productRefs = []
+  question.productMode = undefined
+}
+
 const setProductRefs = (question, refs) => {
   question.productRefs = refs
   if (refs.length && !question.productMode) question.productMode = 'single'
@@ -52,7 +57,7 @@ export default function FormDesigner({ initialSchema, initialTab, onChange }) {
       const question = options.obj
       options.titleActions.push(
         { id: 'select-product', title: 'Select...', action: () => setPickerQuestion(question) },
-        { id: 'clear-product', title: 'Clear', action: () => (question.productRefs = []) },
+        { id: 'clear-product', title: 'Clear', action: () => clearProductRefs(question) },
       )
     })
     // Fixed Creator UI theme; the "Creator Settings" (gear) button is hidden above.
