@@ -33,7 +33,7 @@ function transformElements(elements, bindings) {
         allowRemovePanel: false,
       }
     }
-    const names = binding.products.map((p) => p.name).join(', ')
+    const names = binding.products.map((p) => p.description).join(', ')
     return { ...rest, description: [`Products: ${names}`, el.description].filter(Boolean).join('\n') }
   })
 }
@@ -44,7 +44,7 @@ function buildModel(schema, bindings = {}) {
   model.applyTheme(PlainLight)
   for (const [name, b] of Object.entries(bindings)) {
     if (b.mode === 'each') {
-      model.setValue(name, b.products.map((p) => ({ productId: p.id, productName: p.path })))
+      model.setValue(name, b.products.map((p) => ({ productId: p.id, productName: p.description })))
     }
   }
   return model

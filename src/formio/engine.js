@@ -1,8 +1,7 @@
 import { lazy } from 'react'
 import { createTaskTypeApi } from '../shared/createTaskTypeApi.js'
-import { SEED } from './seed.js'
 
-const api = createTaskTypeApi({ storageKey: 'poc.formio.taskTypes.v1', seed: SEED })
+const api = createTaskTypeApi({ storageKey: 'poc.formio.taskTypes.v1', seed: [] })
 
 // Form.io components can nest (containers, panels, columns, ...), so walk the tree.
 // Layout-only components don't produce answers.

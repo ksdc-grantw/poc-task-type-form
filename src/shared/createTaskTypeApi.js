@@ -7,9 +7,7 @@ const delay = (ms = 150) => new Promise((resolve) => setTimeout(resolve, ms))
 export function createTaskTypeApi({ storageKey, seed }) {
   const read = () => {
     const raw = localStorage.getItem(storageKey)
-    if (raw) return JSON.parse(raw)
-    localStorage.setItem(storageKey, JSON.stringify(seed))
-    return seed
+    return raw ? JSON.parse(raw) : seed
   }
   const write = (items) => localStorage.setItem(storageKey, JSON.stringify(items))
 
@@ -17,12 +15,6 @@ export function createTaskTypeApi({ storageKey, seed }) {
     async listTaskTypes() {
       await delay()
       return read()
-    },
-
-    async resetTaskTypes() {
-      localStorage.setItem(storageKey, JSON.stringify(seed))
-      await delay()
-      return seed
     },
 
     async getTaskType(id) {

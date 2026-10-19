@@ -9,30 +9,16 @@ export default function TaskList() {
     taskApi.list().then(setTasks)
   }, [])
 
-  const reset = () => {
-    setTasks(null)
-    taskApi.reset().then(setTasks)
-  }
-
   return (
     <main className="mx-auto w-full max-w-5xl px-6 py-8">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-xl font-semibold">Tasks</h2>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm hover:bg-slate-100"
-          >
-            Reset mock data
-          </button>
-          <Link
-            to="/tasks/new"
-            className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
-          >
-            New Task
-          </Link>
-        </div>
+        <Link
+          to="/tasks/new"
+          className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+        >
+          New Task
+        </Link>
       </div>
 
       <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
@@ -72,7 +58,7 @@ export default function TaskList() {
                       <ul className="space-y-0.5">
                         {bound.map((b, i) => (
                           <li key={i}>
-                            {b.items.map((x) => x.name).join(', ')}{' '}
+                            {b.products.map((x) => x.description).join(', ')}{' '}
                             <span className="text-slate-400">
                               ({b.products.length} product{b.products.length === 1 ? '' : 's'}, {b.mode})
                             </span>

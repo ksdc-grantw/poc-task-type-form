@@ -12,11 +12,6 @@ export default function AgentTemplateList() {
     agentTemplateApi.list().then(setTemplates)
   }, [])
 
-  const reset = () => {
-    setTemplates(null)
-    agentTemplateApi.reset().then(setTemplates)
-  }
-
   return (
     <main className="mx-auto w-full max-w-5xl px-6 py-8">
       <div className="mb-4 flex items-center justify-between">
@@ -24,13 +19,6 @@ export default function AgentTemplateList() {
           <h2 className="text-xl font-semibold">Agent Templates</h2>
           <p className="text-sm text-slate-500">Forms an Agent can start on their own, without an assigned Task.</p>
         </div>
-        <button
-          type="button"
-          onClick={reset}
-          className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm hover:bg-slate-100"
-        >
-          Reset mock data
-        </button>
       </div>
 
       <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">

@@ -1,4 +1,5 @@
 import { BASE_SEED } from '../shared/baseSeed.js'
+import { findProducts } from '../products/productApi.js'
 
 export const SEED = [
   ...BASE_SEED,
@@ -110,7 +111,7 @@ export const SEED = [
                 name: 'shelfPhotos',
                 title: 'Shelf photos',
                 description: 'Up to 5 photos, one per bay.',
-                productRefs: ['product:sku-1000'],
+                productRefs: findProducts([6]),
                 productMode: 'single',
                 isRequired: true,
                 allowMultiple: true,
@@ -123,7 +124,7 @@ export const SEED = [
                 name: 'lineDisplayPhotos',
                 title: 'Product line display',
                 description: 'The whole range, side by side.',
-                productRefs: ['line:line-cola'],
+                productRefs: findProducts([6, 7, 8, 9]),
                 productMode: 'each',
                 allowMultiple: true,
                 photoOnly: true, acceptedCategories: ['image'],
@@ -134,7 +135,7 @@ export const SEED = [
                 name: 'customerPhotos',
                 title: 'Customer photos',
                 description: 'Only if the customer agreed.',
-                productRefs: ['category:cat-beverages', 'line:line-chips'],
+                productRefs: findProducts([1, 2, 10, 11]),
                 productMode: 'single',
                 allowMultiple: true,
                 photoOnly: true, acceptedCategories: ['image'],

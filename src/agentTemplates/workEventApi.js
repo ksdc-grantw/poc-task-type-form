@@ -1,4 +1,4 @@
-import { SEED } from './seed.js'
+import { readTemplates } from './api.js'
 
 // Deterministic PRNG so the mock data is the same on every load.
 function mulberry32(seed) {
@@ -63,9 +63,9 @@ function answerFor(rand, template, question, hue) {
   }
 }
 
-function buildEvents(now) {
+function buildEvents(now, templates) {
   const events = []
-  SEED.forEach((template, templateIndex) => {
+  templates.forEach((template, templateIndex) => {
     const rand = mulberry32(1000 + templateIndex)
     const count = 10 + Math.floor(rand() * 6)
     for (let i = 0; i < count; i++) {
@@ -107,11 +107,10 @@ function resolve(event) {
   return { ...event, userName: agent?.name ?? event.userId, siteName: site?.name ?? 'Unknown location' }
 }
 
-let cache
+// Events are generated from whatever templates currently exist.
 export const workEventApi = {
   async list() {
     await new Promise((resolve) => setTimeout(resolve, 150))
-    cache ??= buildEvents(Date.now()).map(resolve)
-    return cache
+    return buildEvents(Date.now(), readTemplates()).map(resolve)
   },
 }

@@ -1,7 +1,7 @@
 import { Serializer } from 'survey-core'
 
-// Relates a question to a set of products, lines or categories, stored as an array of
-// "level:id" refs (see productApi.js). A question with refs is product-related: they are
+// Relates a question to a set of products, stored as an array of
+// product objects (see productApi.js). A question with refs is product-related: they are
 // the form's default set, which task creation may override.
 // productMode: "single" = one answer for the whole set; "each" = repeated per product.
 // It has no default (a default is omitted from the form JSON), so it is always written

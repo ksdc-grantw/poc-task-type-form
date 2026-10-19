@@ -1,26 +1,23 @@
 import { SEED } from './seed.js'
 
-const STORAGE_KEY = 'poc.agentTemplates.v1'
+export const TEMPLATES_KEY = 'poc.agentTemplates.v2'
+const STORAGE_KEY = TEMPLATES_KEY
 const delay = (ms = 150) => new Promise((resolve) => setTimeout(resolve, ms))
 
-const read = () => {
+// Agent templates have no creation trigger yet, so they always start from the seed.
+export const readTemplates = () => {
   const raw = localStorage.getItem(STORAGE_KEY)
   if (raw) return JSON.parse(raw)
   localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED))
   return SEED
 }
+const read = readTemplates
 
 // Mock backend for the agent templates table, persisted in localStorage.
 export const agentTemplateApi = {
   async list() {
     await delay()
     return read()
-  },
-
-  async reset() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED))
-    await delay()
-    return SEED
   },
 
   async get(id) {

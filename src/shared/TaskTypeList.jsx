@@ -30,30 +30,16 @@ export default function TaskTypeList() {
     api.listTaskTypes().then(setTaskTypes)
   }, [api])
 
-  const reset = () => {
-    setTaskTypes(null)
-    api.resetTaskTypes().then(setTaskTypes)
-  }
-
   return (
     <section>
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-xl font-semibold">Task Types</h2>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={reset}
-            className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm hover:bg-slate-100"
-          >
-            Reset mock data
-          </button>
-          <Link
-            to={`${basePath}/task-types/new`}
-            className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
-          >
-            New Task Type
-          </Link>
-        </div>
+        <Link
+          to={`${basePath}/task-types/new`}
+          className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+        >
+          New Task Type
+        </Link>
       </div>
 
       <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">

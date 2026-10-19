@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import engine from '../surveyjs/engine.js'
 import ProductPicker from './ProductPicker.jsx'
-import { expandProducts, toSnapshot } from '../products/productApi.js'
 import { productQuestions } from './productQuestions.js'
 import { taskApi } from './taskApi.js'
 
@@ -31,7 +30,7 @@ export default function TaskCreate() {
     setError(null)
     const next = taskTypes?.find((t) => t.id === Number(id))
     const defaults = next?.form?.schema ? productQuestions(next.form.schema) : []
-    setBindings(Object.fromEntries(defaults.map((q) => [q.name, q.defaultItems])))
+    setBindings(Object.fromEntries(defaults.map((q) => [q.name, q.defaultProducts])))
   }
 
   const save = async () => {
@@ -40,15 +39,13 @@ export default function TaskCreate() {
     if (missing.length) return setError(`Choose products for: ${missing.map((q) => q.title).join(', ')}`)
     setSaving(true)
     try {
-      // Snapshot the items and the products they expand to, so the Task doesn't change
-      // if the catalogue does.
+      // Snapshot the products so the Task doesn't change if the catalogue does.
       const productBindings = Object.fromEntries(
         questions.map((q) => [
           q.name,
           {
             mode: q.mode,
-            items: bindings[q.name].map(toSnapshot),
-            products: expandProducts(bindings[q.name]).map(toSnapshot),
+            products: bindings[q.name],
           },
         ]),
       )

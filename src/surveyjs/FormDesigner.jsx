@@ -10,8 +10,6 @@ import './customQuestions.js'
 import './productRefEditor.js'
 import ProductPickerModal from '../products/ProductPickerModal.jsx'
 
-import { makeRefs } from '../products/productApi.js'
-
 // Tabs, toolbox, property grid and options all come from the UI preset.
 const uiPreset = new UIPreset(preset)
 
@@ -98,10 +96,10 @@ export default function FormDesigner({ initialSchema, initialTab, onChange }) {
       <SurveyCreatorComponent creator={creator} />
       {pickerQuestion && (
         <ProductPickerModal
-          initialRefs={pickerQuestion.productRefs}
+          initial={pickerQuestion.productRefs}
           onClose={() => setPickerQuestion(null)}
           onSelect={(items) => {
-            setProductRefs(pickerQuestion, makeRefs(items))
+            setProductRefs(pickerQuestion, items)
             setPickerQuestion(null)
           }}
         />
