@@ -16,7 +16,7 @@ function transformElements(elements, bindings) {
     if (el.elements) return { ...el, elements: transformElements(el.elements, bindings) }
     if (!binding) return el
     // eslint-disable-next-line no-unused-vars
-    const { productRefs, productMode, ...rest } = el
+    const { productRefs, productMode, productRelated, ...rest } = el
     if (binding.mode === 'each') {
       return {
         type: 'paneldynamic',

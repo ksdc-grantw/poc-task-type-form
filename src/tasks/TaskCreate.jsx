@@ -93,7 +93,7 @@ export default function TaskCreate() {
         {questions.length > 0 && (
           <div className="space-y-4">
             <p className="text-sm text-slate-500">
-              These questions relate to products. Choose which ones each applies to for this Task.
+              These questions relate to products. Products set by the task type are fixed; choose them for the rest.
             </p>
             {questions.map((q) => (
               <div key={q.name}>
@@ -106,6 +106,7 @@ export default function TaskCreate() {
                 <ProductPicker
                   value={bindings[q.name]}
                   onChange={(v) => setBindings((b) => ({ ...b, [q.name]: v }))}
+                  locked={q.defaultProducts.length > 0}
                 />
               </div>
             ))}

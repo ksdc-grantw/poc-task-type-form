@@ -2,6 +2,7 @@ import { SEED as TASK_TYPE_SEED } from '../surveyjs/seed.js'
 import { TASK_TYPES_KEY } from '../surveyjs/engine.js'
 import { TASKS_KEY } from '../tasks/taskApi.js'
 import { productQuestions } from '../tasks/productQuestions.js'
+import { PRODUCTS } from '../products/productApi.js'
 
 const TASK_COUNT = 15
 const DAY_MS = 24 * 60 * 60 * 1000
@@ -23,7 +24,10 @@ function buildTasks() {
       taskTypeName: type.name,
       formVersion: type.form?.version ?? null,
       productBindings: Object.fromEntries(
-        questions.map((q) => [q.name, { mode: q.mode, products: q.defaultProducts }]),
+        questions.map((q) => [
+          q.name,
+          { mode: q.mode, products: q.defaultProducts.length ? q.defaultProducts : PRODUCTS.slice(0, 2) },
+        ]),
       ),
     }
   })

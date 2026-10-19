@@ -96,6 +96,7 @@
             "title",
             "description",
             "isRequired",
+            "productRelated",
             "productRefs",
             "productMode"
           ]
@@ -113,8 +114,8 @@
         },
         "file": {
           "properties": [
-            "allowMultiple",
             "sourceType",
+            "allowMultiple",
             "acceptedCategories",
             "acceptedTypes",
             "maxSize"

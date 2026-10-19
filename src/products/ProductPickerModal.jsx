@@ -8,7 +8,7 @@ import { listFilters, matchProducts } from './productApi.js'
 export default function ProductPickerModal({ initial = [], onSelect, onClose }) {
   const filters = useMemo(() => listFilters(), [])
   const [active, setActive] = useState({})
-  const [base, setBase] = useState(() => new Map(initial.map((p) => [p.id, p])))
+  const [base, setBase] = useState(() => new Map((initial ?? []).map((p) => [p.id, p])))
   const [unticked, setUnticked] = useState(() => new Set())
 
   const matches = useMemo(() => matchProducts(active), [active])

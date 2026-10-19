@@ -36,12 +36,10 @@ SvgRegistry.registerIcon(
 
 const clearProductRefs = (question) => {
   question.productRefs = []
-  question.productMode = undefined
 }
 
 const setProductRefs = (question, refs) => {
   question.productRefs = refs
-  if (refs.length && !question.productMode) question.productMode = 'single'
 }
 
 export default function FormDesigner({ initialSchema, initialTab, onChange }) {
@@ -57,6 +55,17 @@ export default function FormDesigner({ initialSchema, initialTab, onChange }) {
         { id: 'select-product', title: 'Select...', action: () => setPickerQuestion(question) },
         { id: 'clear-product', title: 'Clear', action: () => clearProductRefs(question) },
       )
+    })
+    // Switching "Related to Product" on defaults the mode; off clears the product settings.
+    c.onModified.add((_, options) => {
+      if (options.name !== 'productRelated') return
+      const question = options.target
+      if (question.productRelated) {
+        if (!question.productMode) question.productMode = 'single'
+      } else if (question.productRefs?.length || question.productMode) {
+        question.productRefs = []
+        question.productMode = undefined
+      }
     })
     // Fixed Creator UI theme; the "Creator Settings" (gear) button is hidden above.
     c.applyCreatorTheme(PlainLight)
