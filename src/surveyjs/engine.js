@@ -1,6 +1,7 @@
 import { lazy } from 'react'
 import { Version as SURVEYJS_VERSION } from 'survey-core'
 import { createTaskTypeApi } from '../shared/createTaskTypeApi.js'
+import { buildInstructionForm } from './instructionSchema.js'
 
 export const TASK_TYPES_KEY = 'poc.taskTypes.v16'
 const api = createTaskTypeApi({ storageKey: TASK_TYPES_KEY, seed: [] })
@@ -35,6 +36,7 @@ const engine = {
   FormPreview: lazy(() => import('./FormPreview.jsx')),
   countQuestions,
   buildForm,
+  buildInstructionForm,
 }
 
 export default engine

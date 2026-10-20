@@ -4,6 +4,7 @@ import engine from '../surveyjs/engine.js'
 import ProductPicker from './ProductPicker.jsx'
 import { productQuestions } from './productQuestions.js'
 import { taskApi } from './taskApi.js'
+import { RESPONSE_TYPES, buildInstructionForm } from '../surveyjs/instructionSchema.js'
 
 const MODE_LABEL = { single: 'One answer for all products', each: 'Repeated for each product' }
 
@@ -14,12 +15,17 @@ export default function TaskCreate() {
   const [bindings, setBindings] = useState({})
   const [error, setError] = useState(null)
   const [saving, setSaving] = useState(false)
+  const [instruction, setInstruction] = useState('')
+  const [responses, setResponses] = useState([])
+  const toggleResponse = (key) =>
+    setResponses((r) => (r.includes(key) ? r.filter((k) => k !== key) : [...r, key]))
 
   useEffect(() => {
     engine.api.listTaskTypes().then((all) => setTaskTypes(all.filter((t) => t.status === 'ACTIVE')))
   }, [])
 
   const taskType = taskTypes?.find((t) => t.id === Number(taskTypeId))
+  const isInstruction = taskType?.function === 'INSTRUCTION'
   const questions = useMemo(
     () => (taskType?.form?.schema ? productQuestions(taskType.form.schema) : []),
     [taskType],
@@ -36,6 +42,8 @@ export default function TaskCreate() {
   const save = async () => {
     const missing = questions.filter((q) => !bindings[q.name]?.length)
     if (!taskType) return setError('Choose a task type')
+    if (isInstruction && !instruction.trim()) return setError('Enter the instruction')
+    if (isInstruction && responses.length === 0) return setError('Choose at least one response type')
     if (missing.length) return setError(`Choose products for: ${missing.map((q) => q.title).join(', ')}`)
     setSaving(true)
     try {
@@ -54,6 +62,7 @@ export default function TaskCreate() {
         taskTypeName: taskType.name,
         formVersion: taskType.form?.version ?? null,
         productBindings,
+        ...(isInstruction && { form: buildInstructionForm(instruction.trim(), responses) }),
       })
       navigate('/tasks')
     } catch (e) {
@@ -103,8 +112,34 @@ export default function TaskCreate() {
           </select>
         </label>
 
-        {taskType && questions.length === 0 && (
+        {taskType && questions.length === 0 && !isInstruction && (
           <p className="text-sm text-slate-500">This task type has no product-specific questions.</p>
+        )}
+
+        {isInstruction && (
+          <div className="space-y-4">
+            <label className="block text-sm">
+              <span className="mb-1 block font-medium">Instruction</span>
+              <textarea
+                value={instruction}
+                onChange={(e) => setInstruction(e.target.value)}
+                rows={4}
+                placeholder="What should the agent do?"
+                className="w-full rounded-md border border-slate-300 px-3 py-2"
+              />
+            </label>
+            <fieldset className="text-sm">
+              <legend className="mb-1 font-medium">Required response(s)</legend>
+              <div className="flex gap-4">
+                {Object.entries(RESPONSE_TYPES).map(([key, { label }]) => (
+                  <label key={key} className="flex items-center gap-2">
+                    <input type="checkbox" checked={responses.includes(key)} onChange={() => toggleResponse(key)} />
+                    {label}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </div>
         )}
 
         {questions.length > 0 && (

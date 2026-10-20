@@ -177,7 +177,9 @@ export default function TaskTypeEditor() {
           </Field>
           <Field label="Function">
             <select className={inputCls} value={values.function} onChange={changeFunction} disabled={locked}>
-              {Object.entries(FUNCTIONS).map(([code, label]) => (
+              {Object.entries(FUNCTIONS)
+                .filter(([code]) => code !== 'INSTRUCTION' || engine.buildInstructionForm)
+                .map(([code, label]) => (
                 <option
                   key={code}
                   value={code}
@@ -225,7 +227,11 @@ export default function TaskTypeEditor() {
           </div>
         )}
         {!isForm && !showPayload && (
-          <p className="p-6 text-sm text-slate-400">No form designer for this function.</p>
+          <p className="p-6 text-sm text-slate-400">
+            {values.function === 'INSTRUCTION'
+              ? 'No form to design. The instruction and the required responses are chosen when a task is created.'
+              : 'No form designer for this function.'}
+          </p>
         )}
         {showPayload && (
           <aside className={`${isForm ? 'w-[28rem] border-l' : 'flex-1'} overflow-auto border-slate-200 bg-slate-900 p-4`}>

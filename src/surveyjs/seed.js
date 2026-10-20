@@ -185,4 +185,12 @@ export const SEED = [
       },
     },
   },
+  {
+    id: 10,
+    name: 'Instruction',
+    function: 'INSTRUCTION',
+    status: 'ACTIVE',
+    daysPriorToDueDate: 0,
+    daysToExpiry: 2,
+  },
 ]

@@ -3,6 +3,7 @@ import { TASK_TYPES_KEY } from '../surveyjs/engine.js'
 import { TASKS_KEY } from '../tasks/taskApi.js'
 import { productQuestions } from '../tasks/productQuestions.js'
 import { PRODUCTS } from '../products/productApi.js'
+import { buildInstructionForm } from '../surveyjs/instructionSchema.js'
 
 const TASK_COUNT = 15
 const DAY_MS = 24 * 60 * 60 * 1000
@@ -23,6 +24,12 @@ function buildTasks() {
       taskTypeId: type.id,
       taskTypeName: type.name,
       formVersion: type.form?.version ?? null,
+      ...(type.function === 'INSTRUCTION' && {
+        form: buildInstructionForm('Photograph the end-of-aisle display and note whether the price tickets are showing.', [
+          'text',
+          'photo',
+        ]),
+      }),
       productBindings: Object.fromEntries(
         questions.map((q) => [
           q.name,
