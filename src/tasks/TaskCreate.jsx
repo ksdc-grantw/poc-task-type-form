@@ -70,6 +70,23 @@ export default function TaskCreate() {
       <h2 className="mb-6 text-xl font-semibold">New Task</h2>
 
       <div className="space-y-6 rounded-lg border border-slate-200 bg-white p-6">
+        <fieldset className="space-y-3">
+          <legend className="text-sm text-slate-500">
+            Shown for comparison with the existing form; not captured in this POC.
+          </legend>
+          {['Customer Location', 'Occurrence', 'Assignee'].map((label) => (
+            <label key={label} className="block text-sm">
+              <span className="mb-1 block font-medium">{label}</span>
+              <input
+                type="text"
+                readOnly
+                disabled
+                className="w-full rounded-md border border-slate-200 bg-slate-100 px-3 py-2 text-slate-500"
+              />
+            </label>
+          ))}
+        </fieldset>
+
         <label className="block text-sm">
           <span className="mb-1 block font-medium">Task type</span>
           <select
