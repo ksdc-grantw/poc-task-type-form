@@ -1,0 +1,3 @@
+# SurveyJS is the Engine for the real app
+
+The POC compared SurveyJS and Form.io, and the real app uses SurveyJS Survey Creator to design Forms. Switching later means migrating every stored Form Schema and re-implementing the custom question types, so the choice is costly to reverse. Form.io was set aside after the comparison. The Form is designed on the web, but completion on the device is a separate piece of work by another team, which renders the Form Schema with custom rendering because SurveyJS has no Android renderer. Survey Creator needs a commercial licence, which must be in place before the real app ships.
