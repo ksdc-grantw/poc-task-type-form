@@ -42,11 +42,11 @@ const setProductRefs = (question, refs) => {
   question.productRefs = refs
 }
 
-export default function FormDesigner({ initialSchema, initialTab, onChange }) {
+export default function FormDesigner({ initialSchema, initialTab, onChange, readOnly = false }) {
   // The question whose default product is being chosen in the modal.
   const [pickerQuestion, setPickerQuestion] = useState(null)
   const [creator] = useState(() => {
-    const c = new SurveyCreator({ collapseOnDrag: true, showCreatorThemeSettings: false })
+    const c = new SurveyCreator({ collapseOnDrag: true, showCreatorThemeSettings: false, readOnly })
     uiPreset.applyTo(c)
     c.onPropertyEditorUpdateTitleActions.add((_, options) => {
       if (options.property.name !== 'productRefs') return

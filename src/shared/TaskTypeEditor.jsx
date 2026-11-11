@@ -140,6 +140,19 @@ export default function TaskTypeEditor() {
   const nameFixed = locked || SINGLE_INSTANCE.includes(values.function)
   const isForm = values.function === 'FORM'
   const immutable = values.function === 'STOCK_COUNT'
+  // Read-only view of a function's form. Instruction has no stored form: this is a sample with every response.
+  const fixedForm = immutable
+    ? {
+        schema: existing?.form?.schema ?? engine.buildStockCountForm().schema,
+        note: 'This form is fixed and read-only. Products are chosen when a task is created; only the status can be edited.',
+      }
+    : values.function === 'INSTRUCTION' && engine.buildInstructionForm
+      ? {
+          // eslint-disable-next-line no-unused-vars
+          schema: (({ instruction, ...rest }) => rest)(engine.buildInstructionForm('', ['done', 'text', 'photo'])),
+          note: 'Sample only, read-only. The instruction text is written, and the responses (Done, Text, Photo) are chosen, when a task is created; each task gets only the responses chosen for it.',
+        }
+      : null
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -221,24 +234,25 @@ export default function TaskTypeEditor() {
       </div>
 
       <div className="flex min-h-0 flex-1">
-        {isForm && (
+        {(isForm || fixedForm) && (
           <div className="min-h-[600px] min-w-0 flex-1">
             <Suspense fallback={<p className="p-6 text-slate-400">Loading form designer...</p>}>
-              <FormDesigner initialSchema={schema ?? undefined} initialTab={initialTab} onChange={setSchema} />
+              {fixedForm ? (
+                <>
+                  <p className="border-b border-slate-200 bg-slate-50 px-6 py-2 text-sm text-slate-600">{fixedForm.note}</p>
+                  <FormDesigner key={values.function} readOnly initialSchema={fixedForm.schema} onChange={() => {}} />
+                </>
+              ) : (
+                <FormDesigner initialSchema={schema ?? undefined} initialTab={initialTab} onChange={setSchema} />
+              )}
             </Suspense>
           </div>
         )}
-        {!isForm && !showPayload && (
-          <p className="p-6 text-sm text-slate-400">
-            {values.function === 'INSTRUCTION'
-              ? 'No form to design. The instruction and the required responses are chosen when a task is created.'
-              : immutable
-                ? 'The form is fixed and cannot be changed. Products are chosen when a task is created; only the status can be edited.'
-                : 'No form designer for this function.'}
-          </p>
+        {!isForm && !fixedForm && !showPayload && (
+          <p className="p-6 text-sm text-slate-400">No form designer for this function.</p>
         )}
         {showPayload && (
-          <aside className={`${isForm ? 'w-[28rem] border-l' : 'flex-1'} overflow-auto border-slate-200 bg-slate-900 p-4`}>
+          <aside className={`${isForm || fixedForm ? 'w-[28rem] border-l' : 'flex-1'} overflow-auto border-slate-200 bg-slate-900 p-4`}>
             <p className="mb-2 text-xs font-medium uppercase text-slate-400">
               {isNew ? 'POST /task-types' : `PUT /task-types/${id}`}
             </p>
