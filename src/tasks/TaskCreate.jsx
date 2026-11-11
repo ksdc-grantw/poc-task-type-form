@@ -6,7 +6,7 @@ import { productQuestions } from './productQuestions.js'
 import { taskApi } from './taskApi.js'
 import { RESPONSE_TYPES, buildInstructionForm } from '../surveyjs/instructionSchema.js'
 
-const MODE_LABEL = { single: 'One answer for all products', each: 'Repeated for each product' }
+const MODE_LABEL = { single: 'One answer for all products', each: 'Repeated for each product', matrix: 'One row per product' }
 
 export default function TaskCreate() {
   const navigate = useNavigate()

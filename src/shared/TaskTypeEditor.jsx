@@ -24,6 +24,7 @@ function buildPayload(engine, values, schema, existing) {
   }
   if (values.function === 'PDF') payload.attachment = values.attachment
   if (values.function === 'FORM') payload.form = engine.buildForm(existing?.form, schema)
+  if (values.function === 'STOCK_COUNT') payload.form = existing?.form ?? engine.buildStockCountForm()
   if (existing) {
     // Name and function are locked after creation.
     delete payload.name
@@ -138,6 +139,7 @@ export default function TaskTypeEditor() {
   const locked = !isNew
   const nameFixed = locked || SINGLE_INSTANCE.includes(values.function)
   const isForm = values.function === 'FORM'
+  const immutable = values.function === 'STOCK_COUNT'
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -178,7 +180,7 @@ export default function TaskTypeEditor() {
           <Field label="Function">
             <select className={inputCls} value={values.function} onChange={changeFunction} disabled={locked}>
               {Object.entries(FUNCTIONS)
-                .filter(([code]) => code !== 'INSTRUCTION' || engine.buildInstructionForm)
+                .filter(([code]) => (code !== 'INSTRUCTION' || engine.buildInstructionForm) && (code !== 'STOCK_COUNT' || engine.buildStockCountForm))
                 .map(([code, label]) => (
                 <option
                   key={code}
@@ -197,10 +199,10 @@ export default function TaskTypeEditor() {
             </select>
           </Field>
           <Field label="Days Prior to Due Date">
-            <input type="number" min="0" className={inputCls} value={values.daysPriorToDueDate} onChange={set('daysPriorToDueDate')} />
+            <input type="number" min="0" className={inputCls} value={values.daysPriorToDueDate} onChange={set('daysPriorToDueDate')} disabled={immutable && locked} />
           </Field>
           <Field label="Days to Expiry">
-            <input type="number" min="0" className={inputCls} value={values.daysToExpiry} onChange={set('daysToExpiry')} />
+            <input type="number" min="0" className={inputCls} value={values.daysToExpiry} onChange={set('daysToExpiry')} disabled={immutable && locked} />
           </Field>
           {values.function === 'PDF' && (
             <Field label={`Attachment (PDF, max 2 MB)${values.attachment ? ` - current: ${values.attachment.fileName}` : ''}`}>
@@ -230,7 +232,9 @@ export default function TaskTypeEditor() {
           <p className="p-6 text-sm text-slate-400">
             {values.function === 'INSTRUCTION'
               ? 'No form to design. The instruction and the required responses are chosen when a task is created.'
-              : 'No form designer for this function.'}
+              : immutable
+                ? 'The form is fixed and cannot be changed. Products are chosen when a task is created; only the status can be edited.'
+                : 'No form designer for this function.'}
           </p>
         )}
         {showPayload && (

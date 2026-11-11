@@ -11,7 +11,7 @@ export function productQuestions(schema) {
     .map((q) => ({
       name: q.name,
       title: q.title,
-      mode: q.productMode === 'each' ? 'each' : 'single',
+      mode: ['each', 'matrix'].includes(q.productMode) ? q.productMode : 'single',
       defaultProducts: q.productRefs ?? [],
     }))
 }

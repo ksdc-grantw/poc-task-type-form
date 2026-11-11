@@ -28,6 +28,10 @@ _Avoid_: Tenant, account
 A Function whose Task carries free text the Company Administrator writes, plus the responses (Done, Text, Photo) the Agent must give. Text only. There is one Instruction Task Type per Company Context.
 _Avoid_: Note, message
 
+**Stock Count**:
+A Function whose Form is fixed and cannot be designed or changed: one product-related "Capture counts" matrix with a row per Product chosen when a Task is created and Units, Cases and Pallets columns. Only the Status can be edited. There is one Stock Count Task Type per Company Context; SurveyJS only.
+_Avoid_: Stocktake, inventory
+
 **Agent**:
 The field person who fills in Forms on a mobile device.
 _Avoid_: User, worker

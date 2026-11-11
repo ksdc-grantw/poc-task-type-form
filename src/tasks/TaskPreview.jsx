@@ -17,6 +17,9 @@ function transformElements(elements, bindings) {
     if (!binding) return el
     // eslint-disable-next-line no-unused-vars
     const { productRefs, productMode, productRelated, ...rest } = el
+    if (binding.mode === 'matrix') {
+      return { ...rest, rowCount: binding.products.length, minRowCount: binding.products.length, maxRowCount: binding.products.length }
+    }
     if (binding.mode === 'each') {
       return {
         type: 'paneldynamic',
@@ -46,6 +49,9 @@ function buildModel(schema, bindings = {}) {
   const model = new Model({ ...surveySchema, pages })
   model.applyTheme(PlainLight)
   for (const [name, b] of Object.entries(bindings)) {
+    if (b.mode === 'matrix') {
+      model.setValue(name, b.products.map((p) => ({ productId: p.id, product: p.description })))
+    }
     if (b.mode === 'each') {
       model.setValue(name, b.products.map((p) => ({ productId: p.id, productName: p.description })))
     }
