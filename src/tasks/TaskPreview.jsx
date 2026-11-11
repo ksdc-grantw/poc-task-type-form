@@ -7,6 +7,8 @@ import 'survey-core/survey-core.css'
 import engine from '../surveyjs/engine.js'
 import '../surveyjs/customQuestions.js'
 import { taskApi } from './taskApi.js'
+import TaskPayloads from './TaskPayloads.jsx'
+import { externalTaskPayload } from './taskPayloads.js'
 
 // The form as the agent would see it on the device. A "single" product question is labelled
 // with its products; an "each" question becomes a locked dynamic panel with one panel per product.
@@ -62,6 +64,7 @@ function buildModel(schema, bindings = {}) {
 export default function TaskPreview() {
   const { id } = useParams()
   const [task, setTask] = useState(null)
+  const [taskType, setTaskType] = useState(null)
   const [model, setModel] = useState(null)
   const [error, setError] = useState(null)
 
@@ -76,6 +79,7 @@ export default function TaskPreview() {
         const schema = t.form ?? taskType.form?.schema
         if (!schema) throw new Error('This task has no form.')
         setTask(t)
+        setTaskType(taskType)
         setModel(buildModel(schema, t.productBindings))
       })
       .catch((e) => !cancelled && setError(e.message))
@@ -100,6 +104,11 @@ export default function TaskPreview() {
             )}
             <Survey model={model} />
           </div>
+        </div>
+      )}
+      {task && taskType && (
+        <div className="mt-6">
+          <TaskPayloads saved={task} savedTitle={`GET /tasks/${task.id}`} external={externalTaskPayload(task, taskType)} />
         </div>
       )}
     </main>

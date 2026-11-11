@@ -4,6 +4,8 @@ import engine from '../surveyjs/engine.js'
 import ProductPicker from './ProductPicker.jsx'
 import { productQuestions } from './productQuestions.js'
 import { taskApi } from './taskApi.js'
+import TaskPayloads from './TaskPayloads.jsx'
+import { externalTaskPayload } from './taskPayloads.js'
 import { RESPONSE_TYPES, buildInstructionForm } from '../surveyjs/instructionSchema.js'
 
 const MODE_LABEL = { single: 'One answer for all products', each: 'Repeated for each product', matrix: 'One row per product' }
@@ -39,6 +41,21 @@ export default function TaskCreate() {
     setBindings(Object.fromEntries(defaults.map((q) => [q.name, q.defaultProducts])))
   }
 
+  // Snapshot the products so the Task doesn't change if the catalogue does.
+  const payload = useMemo(
+    () =>
+      taskType && {
+        taskTypeId: taskType.id,
+        taskTypeName: taskType.name,
+        formVersion: taskType.form?.version ?? null,
+        productBindings: Object.fromEntries(
+          questions.map((q) => [q.name, { mode: q.mode, products: bindings[q.name] ?? [] }]),
+        ),
+        ...(isInstruction && { form: buildInstructionForm(instruction.trim(), responses) }),
+      },
+    [taskType, questions, bindings, isInstruction, instruction, responses],
+  )
+
   const save = async () => {
     const missing = questions.filter((q) => !bindings[q.name]?.length)
     if (!taskType) return setError('Choose a task type')
@@ -47,23 +64,7 @@ export default function TaskCreate() {
     if (missing.length) return setError(`Choose products for: ${missing.map((q) => q.title).join(', ')}`)
     setSaving(true)
     try {
-      // Snapshot the products so the Task doesn't change if the catalogue does.
-      const productBindings = Object.fromEntries(
-        questions.map((q) => [
-          q.name,
-          {
-            mode: q.mode,
-            products: bindings[q.name],
-          },
-        ]),
-      )
-      await taskApi.create({
-        taskTypeId: taskType.id,
-        taskTypeName: taskType.name,
-        formVersion: taskType.form?.version ?? null,
-        productBindings,
-        ...(isInstruction && { form: buildInstructionForm(instruction.trim(), responses) }),
-      })
+      await taskApi.create(payload)
       navigate('/tasks')
     } catch (e) {
       setError(e.message)
@@ -166,6 +167,10 @@ export default function TaskCreate() {
         )}
 
         {error && <p className="rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</p>}
+
+        {payload && (
+          <TaskPayloads saved={payload} savedTitle="POST /tasks" external={externalTaskPayload(payload, taskType)} />
+        )}
 
         <div className="flex justify-end">
           <button

@@ -36,6 +36,10 @@ Under the engine base path (`/surveyjs`; `/` redirects there):
 - `/surveyjs/task-types/new`, `/surveyjs/task-types/:id` - task type editor. Picking the **Form** function shows the Survey Creator. **Show payload** previews the request body. Add `?tab=preview` to open the Creator on its Preview tab.
 - `/surveyjs/task-types/:id/preview` - **Open Preview** in the list. Renders the saved form with the SurveyJS Form Library only (`survey-react-ui`, no Creator) inside a phone-sized frame, the way an agent would see it.
 
+## Task payloads
+
+On `/tasks/new` and `/tasks/:id`, **Show payload** displays two display-only JSON views (nothing is sent anywhere): the stored Task (`POST /tasks` while creating, the saved record afterwards), and what an external system would receive. The external payload is self-contained: task id and creation time, the Task Type (`id`, `name`, `function`, `status`), the form (`engine`, `version`, opaque `schema`) and the product bindings with products reduced to `{ id, description }`. Both are built in `src/tasks/taskPayloads.js`.
+
 ## Payload
 
 ```json
