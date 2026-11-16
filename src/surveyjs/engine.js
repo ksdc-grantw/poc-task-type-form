@@ -4,7 +4,7 @@ import { createTaskTypeApi } from '../shared/createTaskTypeApi.js'
 import { buildInstructionForm } from './instructionSchema.js'
 import { buildStockCountForm } from './stockCountSchema.js'
 
-export const TASK_TYPES_KEY = 'poc.taskTypes.v17'
+export const TASK_TYPES_KEY = 'poc.taskTypes.v18'
 const api = createTaskTypeApi({ storageKey: TASK_TYPES_KEY, seed: [] })
 
 function countQuestions(schema) {

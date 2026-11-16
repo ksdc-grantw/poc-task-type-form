@@ -6,14 +6,11 @@
 // without a second lookup. The Form Schema stays opaque (ADR 0002); products are reduced to
 // { id, description } because Product Master Data owns the rest.
 export function externalTaskPayload(task, taskType) {
-  // An INSTRUCTION task carries its own generated form; other tasks use their task type's.
-  const form = task.form
-    ? { engine: 'surveyjs', version: null, schema: task.form }
-    : taskType?.form && {
-        engine: taskType.form.engine ?? 'surveyjs',
-        version: taskType.form.version,
-        schema: taskType.form.schema,
-      }
+  const form = taskType?.form && {
+    engine: taskType.form.engine ?? 'surveyjs',
+    version: taskType.form.version,
+    schema: taskType.form.schema,
+  }
   return {
     ...(task.id != null && { id: task.id }),
     ...(task.createdAt && { createdAt: task.createdAt }),
@@ -24,6 +21,7 @@ export function externalTaskPayload(task, taskType) {
       status: taskType.status,
     },
     ...(form && { form }),
+    ...(task.instruction && { instruction: task.instruction }),
     productBindings: Object.fromEntries(
       Object.entries(task.productBindings ?? {}).map(([name, b]) => [
         name,

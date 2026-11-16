@@ -1,6 +1,7 @@
 import { BASE_SEED } from '../shared/baseSeed.js'
 import { findProducts } from '../products/productApi.js'
 import { buildStockCountForm } from './stockCountSchema.js'
+import { buildInstructionForm } from './instructionSchema.js'
 
 export const SEED = [
   ...BASE_SEED,
@@ -193,6 +194,7 @@ export const SEED = [
     status: 'ACTIVE',
     daysPriorToDueDate: 0,
     daysToExpiry: 2,
+    form: buildInstructionForm(),
   },
   {
     id: 11,

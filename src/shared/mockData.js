@@ -3,13 +3,13 @@ import { TASK_TYPES_KEY } from '../surveyjs/engine.js'
 import { TASKS_KEY } from '../tasks/taskApi.js'
 import { productQuestions } from '../tasks/productQuestions.js'
 import { PRODUCTS } from '../products/productApi.js'
-import { buildInstructionForm } from '../surveyjs/instructionSchema.js'
+import { responseVariables } from '../surveyjs/instructionSchema.js'
 
 const TASK_COUNT = 15
 const DAY_MS = 24 * 60 * 60 * 1000
 
 // Storage keys from earlier versions, which used to auto-seed on first load.
-const STALE_KEYS = ['poc.taskTypes.v15', 'poc.taskTypes.v16', 'poc.agentTemplates.v1', 'poc.tasks.v5', 'poc.formio.taskTypes.v1']
+const STALE_KEYS = ['poc.taskTypes.v15', 'poc.taskTypes.v16', 'poc.taskTypes.v17', 'poc.agentTemplates.v1', 'poc.tasks.v5', 'poc.tasks.v6', 'poc.tasks.v7', 'poc.formio.taskTypes.v1']
 
 export const removeStaleData = () => STALE_KEYS.forEach((k) => localStorage.removeItem(k))
 
@@ -25,10 +25,10 @@ function buildTasks() {
       taskTypeName: type.name,
       formVersion: type.form?.version ?? null,
       ...(type.function === 'INSTRUCTION' && {
-        form: buildInstructionForm('Photograph the end-of-aisle display and note whether the price tickets are showing.', [
-          'text',
-          'photo',
-        ]),
+        instruction: {
+          text: 'Photograph the end-of-aisle display and note whether the price tickets are showing.',
+          variables: responseVariables(['text', 'photo']),
+        },
       }),
       productBindings: Object.fromEntries(
         questions.map((q) => [

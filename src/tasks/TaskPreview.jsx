@@ -43,13 +43,13 @@ function transformElements(elements, bindings) {
   })
 }
 
-function buildModel(schema, bindings = {}) {
-  // `instruction` is a root-level field of the form, not a SurveyJS property: show it above the survey.
-  // eslint-disable-next-line no-unused-vars
-  const { instruction, ...surveySchema } = schema
-  const pages = (surveySchema.pages ?? []).map((p) => ({ ...p, elements: transformElements(p.elements, bindings) }))
-  const model = new Model({ ...surveySchema, pages })
+function buildModel(schema, bindings = {}, instruction) {
+  const pages = (schema.pages ?? []).map((p) => ({ ...p, elements: transformElements(p.elements, bindings) }))
+  const model = new Model({ ...schema, pages })
   model.applyTheme(PlainLight)
+  if (instruction) {
+    for (const [name, value] of Object.entries(instruction.variables ?? {})) model.setVariable(name, value)
+  }
   for (const [name, b] of Object.entries(bindings)) {
     if (b.mode === 'matrix') {
       model.setValue(name, b.products.map((p) => ({ productId: p.id, product: p.description })))
@@ -75,12 +75,11 @@ export default function TaskPreview() {
       .then(async (t) => {
         const taskType = await engine.api.getTaskType(t.taskTypeId)
         if (cancelled) return
-        // An INSTRUCTION task carries its own form schema; other tasks use their task type's.
-        const schema = t.form ?? taskType.form?.schema
+        const schema = taskType.form?.schema
         if (!schema) throw new Error('This task has no form.')
         setTask(t)
         setTaskType(taskType)
-        setModel(buildModel(schema, t.productBindings))
+        setModel(buildModel(schema, t.productBindings, t.instruction))
       })
       .catch((e) => !cancelled && setError(e.message))
     return () => {
@@ -99,8 +98,8 @@ export default function TaskPreview() {
       {model && (
         <div className="mx-auto h-[740px] w-[380px] rounded-[2.5rem] border-[10px] border-slate-800 bg-slate-800 shadow-xl">
           <div className="h-full overflow-y-auto rounded-[1.75rem] bg-white">
-            {task?.form?.instruction && (
-              <p className="whitespace-pre-line border-b border-slate-200 bg-slate-50 p-4 text-sm">{task.form.instruction}</p>
+            {task?.instruction && (
+              <p className="whitespace-pre-line border-b border-slate-200 bg-slate-50 p-4 text-sm">{task.instruction.text}</p>
             )}
             <Survey model={model} />
           </div>

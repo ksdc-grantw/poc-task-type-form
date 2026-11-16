@@ -1,4 +1,4 @@
-export const TASKS_KEY = 'poc.tasks.v6'
+export const TASKS_KEY = 'poc.tasks.v8'
 const KEY = TASKS_KEY
 const delay = (ms = 150) => new Promise((resolve) => setTimeout(resolve, ms))
 

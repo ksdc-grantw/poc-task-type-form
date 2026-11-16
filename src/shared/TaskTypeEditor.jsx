@@ -25,6 +25,7 @@ function buildPayload(engine, values, schema, existing) {
   if (values.function === 'PDF') payload.attachment = values.attachment
   if (values.function === 'FORM') payload.form = engine.buildForm(existing?.form, schema)
   if (values.function === 'STOCK_COUNT') payload.form = existing?.form ?? engine.buildStockCountForm()
+  if (values.function === 'INSTRUCTION') payload.form = existing?.form ?? engine.buildInstructionForm()
   if (existing) {
     // Name and function are locked after creation.
     delete payload.name
@@ -140,7 +141,7 @@ export default function TaskTypeEditor() {
   const nameFixed = locked || SINGLE_INSTANCE.includes(values.function)
   const isForm = values.function === 'FORM'
   const immutable = values.function === 'STOCK_COUNT'
-  // Read-only view of a function's form. Instruction has no stored form: this is a sample with every response.
+  // Read-only view of a function's fixed form.
   const fixedForm = immutable
     ? {
         schema: existing?.form?.schema ?? engine.buildStockCountForm().schema,
@@ -148,9 +149,8 @@ export default function TaskTypeEditor() {
       }
     : values.function === 'INSTRUCTION' && engine.buildInstructionForm
       ? {
-          // eslint-disable-next-line no-unused-vars
-          schema: (({ instruction, ...rest }) => rest)(engine.buildInstructionForm('', ['done', 'text', 'photo'])),
-          note: 'Sample only, read-only. The instruction text is written, and the responses (Done, Text, Photo) are chosen, when a task is created; each task gets only the responses chosen for it.',
+          schema: existing?.form?.schema ?? engine.buildInstructionForm().schema,
+          note: 'This form is fixed and read-only. The instruction text and which responses (Done, Text, Photo) are shown are chosen when a task is created; the other responses are hidden for that task.',
         }
       : null
 

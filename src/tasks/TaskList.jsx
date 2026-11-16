@@ -52,8 +52,8 @@ export default function TaskList() {
                 <tr key={t.id}>
                   <td className="px-4 py-2 font-medium">{t.taskTypeName}</td>
                   <td className="px-4 py-2">
-                    {bound.length === 0 && !t.form?.instruction && <span className="text-slate-400">—</span>}
-                    {t.form?.instruction && <p className="whitespace-pre-line">{t.form.instruction}</p>}
+                    {bound.length === 0 && !t.instruction && <span className="text-slate-400">—</span>}
+                    {t.instruction && <p className="whitespace-pre-line">{t.instruction.text}</p>}
                     {bound.length > 0 && (
                       <ul className="space-y-0.5">
                         {bound.map((b, i) => (

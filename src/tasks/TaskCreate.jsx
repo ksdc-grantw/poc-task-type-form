@@ -6,7 +6,7 @@ import { productQuestions } from './productQuestions.js'
 import { taskApi } from './taskApi.js'
 import TaskPayloads from './TaskPayloads.jsx'
 import { externalTaskPayload } from './taskPayloads.js'
-import { RESPONSE_TYPES, buildInstructionForm } from '../surveyjs/instructionSchema.js'
+import { RESPONSE_TYPES, responseVariables } from '../surveyjs/instructionSchema.js'
 
 const MODE_LABEL = { single: 'One answer for all products', each: 'Repeated for each product', matrix: 'One row per product' }
 
@@ -51,7 +51,7 @@ export default function TaskCreate() {
         productBindings: Object.fromEntries(
           questions.map((q) => [q.name, { mode: q.mode, products: bindings[q.name] ?? [] }]),
         ),
-        ...(isInstruction && { form: buildInstructionForm(instruction.trim(), responses) }),
+        ...(isInstruction && { instruction: { text: instruction.trim(), variables: responseVariables(responses) } }),
       },
     [taskType, questions, bindings, isInstruction, instruction, responses],
   )
