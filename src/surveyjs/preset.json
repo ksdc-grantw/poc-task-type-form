@@ -58,6 +58,64 @@
       },
       {
         "name": "pricecheck"
+      },
+      {
+        "name": "merchsurvey",
+        "title": "Merchandising Survey",
+        "iconName": "icon-toolbox-matrixdropdown-24x24",
+        "json": {
+          "type": "matrixdropdown",
+          "title": "Merchandising Survey",
+          "merchSurvey": true,
+          "alternateRows": true,
+          "columns": [
+            { "name": "ShelfFacings", "title": "How many shelf facings?", "cellType": "text", "inputType": "number" },
+            {
+              "name": "ProductPlacement",
+              "title": "Which shelf is the product on?",
+              "cellType": "dropdown",
+              "choices": [
+                { "value": 1, "text": "Top" },
+                { "value": 2, "text": "Middle" },
+                { "value": 3, "text": "Bottom" },
+                { "value": 4, "text": "No stock" }
+              ],
+              "storeOthersAsComment": true
+            },
+            {
+              "name": "2ndDisplayType",
+              "title": "If there is another display in store, what type of display is it?",
+              "cellType": "dropdown",
+              "choices": [
+                { "value": 1, "text": "Gondola End" },
+                { "value": 2, "text": "Free Standing Unit" },
+                { "value": 3, "text": "Shelf Display" }
+              ],
+              "storeOthersAsComment": true
+            }
+          ],
+          "rows": []
+        }
+      },
+      {
+        "name": "stockcount",
+        "title": "Stock Count",
+        "iconName": "icon-toolbox-matrixdynamic-24x24",
+        "json": {
+          "type": "matrixdynamic",
+          "title": "Capture counts",
+          "productRelated": true,
+          "productMode": "matrix",
+          "rowCount": 0,
+          "allowAddRows": false,
+          "allowRemoveRows": false,
+          "columns": [
+            { "name": "product", "title": "Product", "cellType": "text", "readOnly": true },
+            { "name": "units", "title": "Units", "cellType": "text", "inputType": "number", "min": 0, "step": 1, "isRequired": true },
+            { "name": "cases", "title": "Cases", "cellType": "text", "inputType": "number", "min": 0, "step": 1, "isRequired": true },
+            { "name": "pallets", "title": "Pallets", "cellType": "text", "inputType": "number", "min": 0, "step": 1, "isRequired": true }
+          ]
+        }
       }
     ],
     "categories": [
@@ -78,7 +136,9 @@
           "number",
           "photo",
           "product",
-          "pricecheck"
+          "pricecheck",
+          "merchsurvey",
+          "stockcount"
         ]
       }
     ]
@@ -99,6 +159,11 @@
             "productRelated",
             "productRefs",
             "productMode"
+          ]
+        },
+        "matrixdropdown": {
+          "properties": [
+            "merchProductRefs"
           ]
         },
         "comment": {

@@ -1,6 +1,7 @@
 import { ComponentCollection } from 'survey-core'
 import './photoOnly.js'
 import './productRef.js'
+import './merchSurvey.js'
 
 // Mock principal product catalogue. In a real app this would come from the backend
 // (e.g. `choicesByUrl`), not be hard-coded.

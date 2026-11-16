@@ -8,6 +8,7 @@ import 'survey-creator-core/survey-creator-core.css'
 import preset from './preset.json'
 import './customQuestions.js'
 import './productRefEditor.js'
+import { setMerchProducts } from './merchSurvey.js'
 import ProductPickerModal from '../products/ProductPickerModal.jsx'
 
 // Tabs, toolbox, property grid and options all come from the UI preset.
@@ -34,12 +35,11 @@ SvgRegistry.registerIcon(
   '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 8.25H20V9.75H4ZM4 14.25H20V15.75H4ZM9.25 4H10.75L8.75 20H7.25ZM15.25 4H16.75L14.75 20H13.25Z"/></svg>',
 )
 
-const clearProductRefs = (question) => {
-  question.productRefs = []
-}
+const clearProductRefs = (question) => setProductRefs(question, [])
 
 const setProductRefs = (question, refs) => {
-  question.productRefs = refs
+  if (question.merchSurvey) setMerchProducts(question, refs)
+  else question.productRefs = refs
 }
 
 export default function FormDesigner({ initialSchema, initialTab, onChange, readOnly = false }) {
@@ -49,7 +49,7 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
     const c = new SurveyCreator({ collapseOnDrag: true, showCreatorThemeSettings: false, readOnly })
     uiPreset.applyTo(c)
     c.onPropertyEditorUpdateTitleActions.add((_, options) => {
-      if (options.property.name !== 'productRefs') return
+      if (!['productRefs', 'merchProductRefs'].includes(options.property.name)) return
       const question = options.obj
       options.titleActions.push(
         { id: 'select-product', title: 'Select...', action: () => setPickerQuestion(question) },
@@ -71,6 +71,9 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
     c.applyCreatorTheme(PlainLight)
     // Photo questions are always images only, so hide the file-type settings for them.
     c.onPropertyShowing.add((_, options) => {
+      if (options.element.merchSurvey && ['productRelated', 'productRefs', 'productMode'].includes(options.property.name)) {
+        options.show = false
+      }
       if (options.element.photoOnly && PHOTO_LOCKED_PROPERTIES.includes(options.property.name)) {
         options.show = false
       }
@@ -105,7 +108,7 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
       <SurveyCreatorComponent creator={creator} />
       {pickerQuestion && (
         <ProductPickerModal
-          initial={pickerQuestion.productRefs}
+          initial={pickerQuestion.merchSurvey ? pickerQuestion.merchProductRefs : pickerQuestion.productRefs}
           onClose={() => setPickerQuestion(null)}
           onSelect={(items) => {
             setProductRefs(pickerQuestion, items)
