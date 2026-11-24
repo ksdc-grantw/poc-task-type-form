@@ -10,6 +10,7 @@ import './customQuestions.js'
 import './productRefEditor.js'
 import { setMerchProducts } from './merchSurvey.js'
 import ProductPickerModal from '../products/ProductPickerModal.jsx'
+import { findProducts } from '../products/productApi.js'
 
 // Tabs, toolbox, property grid and options all come from the UI preset.
 const uiPreset = new UIPreset(preset)
@@ -35,6 +36,15 @@ SvgRegistry.registerIcon(
   '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 8.25H20V9.75H4ZM4 14.25H20V15.75H4ZM9.25 4H10.75L8.75 20H7.25ZM15.25 4H16.75L14.75 20H13.25Z"/></svg>',
 )
 
+// Icon for the "Select products" action beside a dropdown's Choices.
+SvgRegistry.registerIcon(
+  'icon-select-products',
+  '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 3 6.5V17.5L12 22 21 17.5V6.5ZM12 3.68 18.94 7.15 12 10.62 5.06 7.15ZM4.5 8.36 11.25 11.74V20.04L4.5 16.66ZM12.75 20.04V11.74L19.5 8.36V16.66Z"/></svg>',
+)
+
+// Dropdowns take their products as choices, so the product-binding settings don't apply.
+const DROPDOWN_HIDDEN_PROPERTIES = ['productRelated', 'productRefs', 'productMode']
+
 const clearProductRefs = (question) => setProductRefs(question, [])
 
 const setProductRefs = (question, refs) => {
@@ -42,13 +52,33 @@ const setProductRefs = (question, refs) => {
   else question.productRefs = refs
 }
 
+// Replaces a dropdown's choices with the products: value is the product id, text its description.
+const setProductChoices = (question, products) => {
+  question.choices = products.map((p) => ({ value: p.id, text: p.description }))
+}
+
 export default function FormDesigner({ initialSchema, initialTab, onChange, readOnly = false }) {
   // The question whose default product is being chosen in the modal.
   const [pickerQuestion, setPickerQuestion] = useState(null)
+  // The dropdown whose choices are being replaced with products chosen in the modal.
+  const [choicesQuestion, setChoicesQuestion] = useState(null)
   const [creator] = useState(() => {
     const c = new SurveyCreator({ collapseOnDrag: true, showCreatorThemeSettings: false, readOnly })
     uiPreset.applyTo(c)
     c.onPropertyEditorUpdateTitleActions.add((_, options) => {
+      if (options.property.name === 'choices' && options.obj.getType() === 'dropdown') {
+        const question = options.obj
+        // After the "?" help action, so it sits with the editor buttons rather than by the label.
+        const helpIndex = options.titleActions.findIndex((a) => a.id === 'property-grid-help')
+        options.titleActions.splice(helpIndex + 1, 0, {
+          id: 'select-products',
+          iconName: 'icon-select-products',
+          title: 'Select products',
+          showTitle: false,
+          action: () => setChoicesQuestion(question),
+        })
+        return
+      }
       if (!['productRefs', 'merchProductRefs'].includes(options.property.name)) return
       const question = options.obj
       options.titleActions.push(
@@ -72,6 +102,9 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
     // Photo questions are always images only, so hide the file-type settings for them.
     c.onPropertyShowing.add((_, options) => {
       if (options.element.merchSurvey && ['productRelated', 'productRefs', 'productMode'].includes(options.property.name)) {
+        options.show = false
+      }
+      if (options.element.getType() === 'dropdown' && DROPDOWN_HIDDEN_PROPERTIES.includes(options.property.name)) {
         options.show = false
       }
       if (options.element.photoOnly && PHOTO_LOCKED_PROPERTIES.includes(options.property.name)) {
@@ -113,6 +146,16 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
           onSelect={(items) => {
             setProductRefs(pickerQuestion, items)
             setPickerQuestion(null)
+          }}
+        />
+      )}
+      {choicesQuestion && (
+        <ProductPickerModal
+          initial={findProducts(choicesQuestion.choices.map((c) => c.value))}
+          onClose={() => setChoicesQuestion(null)}
+          onSelect={(items) => {
+            setProductChoices(choicesQuestion, items)
+            setChoicesQuestion(null)
           }}
         />
       )}
