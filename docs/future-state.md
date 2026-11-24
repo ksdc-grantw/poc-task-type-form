@@ -86,7 +86,7 @@ Only a specific set of questions can be linked to products, not every question. 
 - A Task simply uses the products on its Task Type. There is no product step when creating a Task.
 - A product-linked question can't be saved without products.
 
-A custom question such as the Merchandising Survey turns the chosen products into rows: the row value is the product's ID and the row text is its description. The rows are visible in the Form, so changing the products means updating the Task Type.
+A custom question such as the Merchandising Survey turns the chosen products into rows: the row value is the product's ID and the row text is its description. The rows are visible in the Form, so changing the products means updating the Task Type. The **Dynamic Merchandising Survey** is the same, except the agent adds the rows and picks each row's product from a dropdown limited to the chosen products (each product once).
 
 Products are chosen by filtering on **Tags** such as manufacturer, product line, catalogue or variant. Both the Tag names and their values come from Product Master Data, so nothing is hard-coded.
 
@@ -140,7 +140,7 @@ These need discussion before the design is final. More detail is in `docs/open-q
 | 3 | **Sending products to the device.** Do we send every product, or just a product line or Tag references? | A product line can hold hundreds of products. |
 | 4 | **Product Master Data API.** What is the endpoint, what comes back, and do Tags and products need separate calls? | Product Master Data stores every product with all its Tags, and clients build the Tag list themselves. |
 | 5 | **Photos.** How do photos get from the device to the microservice, and are they stored there? | Affects storage, size limits and offline use. |
-| 6 | **Which custom questions ship.** Number, Photo, Merchandising Survey and Shopper Questionnaire need the mobile team's agreement. | We won't offer a question the device can't render. |
+| 6 | **Which custom questions ship.** Number, Photo, Merchandising Survey, Dynamic Merchandising Survey and Shopper Questionnaire need the mobile team's agreement. | We won't offer a question the device can't render. |
 | 8 | **Custom question titles.** Custom questions carry a predefined title (e.g. "Merchandising Survey - ") that identifies a single-question Form. How and at what level is this enforced? | Decides whether the title is locked, validated on save, or only a default. |
 | 9 | **Mixing custom questions with others.** Can a Form with a custom question also hold other questions? | Affects the designer and how answers are reported. |
 | 10 | **Which questions can link to products.** Which question types are product-linked? | Limits the product picker to the right questions. |

@@ -100,6 +100,48 @@
         }
       },
       {
+        "name": "dynamicmerchsurvey",
+        "title": "Dynamic Merchandising Survey",
+        "iconName": "icon-toolbox-dynamicmerchsurvey-24x24",
+        "json": {
+          "type": "matrixdynamic",
+          "title": "Dynamic Merchandising Survey",
+          "merchSurvey": true,
+          "alternateRows": true,
+          "rowCount": 1,
+          "minRowCount": 1,
+          "addRowText": "Add product",
+          "keyName": "Product",
+          "columns": [
+            { "name": "Product", "title": "Product", "cellType": "dropdown", "isRequired": true, "choices": [] },
+            { "name": "ShelfFacings", "title": "How many shelf facings?", "cellType": "text", "inputType": "number" },
+            {
+              "name": "ProductPlacement",
+              "title": "Which shelf is the product on?",
+              "cellType": "dropdown",
+              "choices": [
+                { "value": 1, "text": "Top" },
+                { "value": 2, "text": "Middle" },
+                { "value": 3, "text": "Bottom" },
+                { "value": 4, "text": "No stock" }
+              ],
+              "storeOthersAsComment": true
+            },
+            {
+              "name": "2ndDisplayType",
+              "title": "If there is another display in store, what type of display is it?",
+              "cellType": "dropdown",
+              "choices": [
+                { "value": 1, "text": "Gondola End" },
+                { "value": 2, "text": "Free Standing Unit" },
+                { "value": 3, "text": "Shelf Display" }
+              ],
+              "storeOthersAsComment": true
+            }
+          ]
+        }
+      },
+      {
         "name": "shopperquestionnaire",
         "title": "Shopper Questionnaire",
         "iconName": "icon-toolbox-shopperquestionnaire-24x24",
@@ -184,6 +226,7 @@
         "category": "custom",
         "items": [
           "merchsurvey",
+          "dynamicmerchsurvey",
           "shopperquestionnaire"
         ]
       }
@@ -208,6 +251,11 @@
           ]
         },
         "matrixdropdown": {
+          "properties": [
+            "merchProductRefs"
+          ]
+        },
+        "matrixdynamic": {
           "properties": [
             "merchProductRefs"
           ]

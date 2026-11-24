@@ -37,7 +37,7 @@ Vite, React (plain JavaScript), Tailwind CSS v4, React Router, SurveyJS Survey C
 The Creator is configured for non-technical form authors through a UI preset (`src/surveyjs/preset.json`) plus a few event handlers in `src/surveyjs/FormDesigner.jsx`:
 
 - **Tabs:** Designer and Preview only. No Logic, JSON editor, Translations or Themes tabs.
-- **Toolbox:** Single-Line Input, Long Text, Checkboxes, Radio Button Group, Dropdown and Yes/No, then a **Custom** group: Number, Photo, Merchandising Survey and Shopper Questionnaire.
+- **Toolbox:** Single-Line Input, Long Text, Checkboxes, Radio Button Group, Dropdown and Yes/No, then a **Custom** group: Number, Photo, Merchandising Survey, Dynamic Merchandising Survey and Shopper Questionnaire.
 - **Property grid:** only the properties listed per question type (title, description, required, plus things such as placeholder, choices and photo source). No conditional logic, validators or data settings.
 - **Survey-level settings hidden:** no title, description, progress bar or completion message. The task type supplies those outside the form.
 - **Theme:** the designer UI is fixed to the Plain theme and cannot be changed by users.

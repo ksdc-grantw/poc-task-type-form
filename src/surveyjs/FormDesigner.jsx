@@ -55,6 +55,12 @@ SvgRegistry.registerIcon(
   '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 3H4.5V21H3ZM19.5 3H21V21H19.5ZM4.5 10.25H19.5V11.75H4.5ZM4.5 19.5H19.5V21H4.5ZM6 5H9V10.25H6ZM11 6.5H14V10.25H11ZM15.5 4H18V10.25H15.5ZM6 14.5H10V19.5H6ZM12 13H15.5V19.5H12Z"/></svg>',
 )
 
+// Dynamic Merchandising Survey: the shelf, with a "+" in place of the bottom products.
+SvgRegistry.registerIcon(
+  'icon-toolbox-dynamicmerchsurvey-24x24',
+  '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 3H4.5V21H3ZM19.5 3H21V21H19.5ZM4.5 10.25H19.5V11.75H4.5ZM4.5 19.5H19.5V21H4.5ZM6 5H9V10.25H6ZM11 6.5H14V10.25H11ZM15.5 4H18V10.25H15.5ZM8.5 15H15.5V16.5H8.5ZM11.25 12.25H12.75V19.25H11.25Z"/></svg>',
+)
+
 // Shopper Questionnaire: a shopping bag with a tick.
 SvgRegistry.registerIcon(
   'icon-toolbox-shopperquestionnaire-24x24',

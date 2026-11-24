@@ -5,11 +5,13 @@ import { Serializer } from 'survey-core'
 // JSON like a hand-built matrix, so renderers need no product lookup. Changing the products
 // means editing the task type. Uses its own properties (not productRelated/productRefs) so that
 // Task creation does not ask for products. Any renderer must register these properties too.
-if (!Serializer.findProperty('matrixdropdown', 'merchSurvey')) {
-  Serializer.addProperty('matrixdropdown', { name: 'merchSurvey:boolean', default: false, visible: false })
+// Dynamic Merchandising Survey: the same, but a matrixdynamic where the agent adds rows and picks
+// each row's product from the first column's dropdown, whose choices are the chosen products.
+if (!Serializer.findProperty('matrixdropdownbase', 'merchSurvey')) {
+  Serializer.addProperty('matrixdropdownbase', { name: 'merchSurvey:boolean', default: false, visible: false })
 }
-if (!Serializer.findProperty('matrixdropdown', 'merchProductRefs')) {
-  Serializer.addProperty('matrixdropdown', {
+if (!Serializer.findProperty('matrixdropdownbase', 'merchProductRefs')) {
+  Serializer.addProperty('matrixdropdownbase', {
     name: 'merchProductRefs',
     type: 'productrefs',
     displayName: 'Products',
@@ -20,5 +22,7 @@ if (!Serializer.findProperty('matrixdropdown', 'merchProductRefs')) {
 
 export const setMerchProducts = (question, products) => {
   question.merchProductRefs = products
-  question.rows = products.map((p) => ({ value: p.id, text: p.description }))
+  const items = products.map((p) => ({ value: p.id, text: p.description }))
+  if (question.getType() === 'matrixdynamic') question.columns[0].choices = items
+  else question.rows = items
 }
