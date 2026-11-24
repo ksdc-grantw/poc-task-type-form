@@ -140,7 +140,7 @@ These need discussion before the design is final. More detail is in `docs/open-q
 | 3 | **Sending products to the device.** Do we send every product, or just a product line or Tag references? | A product line can hold hundreds of products. |
 | 4 | **Product Master Data API.** What is the endpoint, what comes back, and do Tags and products need separate calls? | Product Master Data stores every product with all its Tags, and clients build the Tag list themselves. |
 | 5 | **Photos.** How do photos get from the device to the microservice, and are they stored there? | Affects storage, size limits and offline use. |
-| 6 | **Which custom questions ship.** Number, Photo, Product and Price Check need the mobile team's agreement. | We won't offer a question the device can't render. |
+| 6 | **Which custom questions ship.** Number, Photo, Merchandising Survey and Shopper Questionnaire need the mobile team's agreement. | We won't offer a question the device can't render. |
 | 8 | **Custom question titles.** Custom questions carry a predefined title (e.g. "Merchandising Survey - ") that identifies a single-question Form. How and at what level is this enforced? | Decides whether the title is locked, validated on save, or only a default. |
 | 9 | **Mixing custom questions with others.** Can a Form with a custom question also hold other questions? | Affects the designer and how answers are reported. |
 | 10 | **Which questions can link to products.** Which question types are product-linked? | Limits the product picker to the right questions. |

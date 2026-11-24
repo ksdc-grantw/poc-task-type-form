@@ -59,7 +59,7 @@ The Engine-specific JSON definition of a Form. Opaque outside its Engine.
 _Avoid_: Form definition, form JSON
 
 **Custom Question**:
-A domain-specific question type (e.g. Product, Price Check, photo-only) a Company Administrator can add to a Form beyond the Engine's built-in questions.
+A domain-specific question type (e.g. Photo, Merchandising Survey) a Company Administrator can add to a Form beyond the Engine's built-in questions.
 _Avoid_: Custom component, widget
 
 **Form Version**:

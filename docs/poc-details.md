@@ -37,7 +37,7 @@ Vite, React (plain JavaScript), Tailwind CSS v4, React Router, SurveyJS Survey C
 The Creator is configured for non-technical form authors through a UI preset (`src/surveyjs/preset.json`) plus a few event handlers in `src/surveyjs/FormDesigner.jsx`:
 
 - **Tabs:** Designer and Preview only. No Logic, JSON editor, Translations or Themes tabs.
-- **Toolbox:** Single-Line Input, Long Text, Checkboxes, Radio Button Group, Dropdown and Yes/No, then a **Custom** group: Number, Photo, Product and Price Check.
+- **Toolbox:** Single-Line Input, Long Text, Checkboxes, Radio Button Group, Dropdown and Yes/No, then a **Custom** group: Number, Photo, Merchandising Survey and Shopper Questionnaire.
 - **Property grid:** only the properties listed per question type (title, description, required, plus things such as placeholder, choices and photo source). No conditional logic, validators or data settings.
 - **Survey-level settings hidden:** no title, description, progress bar or completion message. The task type supplies those outside the form.
 - **Theme:** the designer UI is fixed to the Plain theme and cannot be changed by users.
@@ -72,7 +72,7 @@ How it would be done:
 Trade-offs: names are no longer stable keys; the same title on two forms gives the same column with possibly different meaning; authors can't reuse a title within a form.
 ## Custom toolbox items
 
-There are three kinds, and the difference is how much the device app has to know. All three appear in the **Custom** group.
+There are four kinds, and the difference is how much the device app has to know. Only preset items are built; they appear in the **Custom** group. Specialized and composite questions were built earlier and then removed from the POC.
 
 ### 1. Preset items (Number, Photo)
 
@@ -83,18 +83,18 @@ A toolbox entry that creates a **built-in** question type with preset settings. 
 - **Cost:** low, a few lines of preset JSON, plus an icon if no built-in one fits (Number needed a custom icon).
 - **Limit:** after adding, authors can change the settings the property grid exposes. Photo has an extra hidden `photoOnly` flag, with the file-type settings hidden for it, so it stays images only. That flag is a custom property; renderers should register it (`src/surveyjs/photoOnly.js`) to recognise a photo field.
 
-### 2. Specialized questions (Product)
+### 2. Specialized questions (Product; removed)
 
-A **new question type** that wraps one built-in question with locked settings. Product is a dropdown whose choices are the (mock) product catalogue, defined once in code.
+A **new question type** that wraps one built-in question with locked settings. Product was a dropdown whose choices were the (mock) product catalogue, defined once in code.
 
 - **Saved as:** `{ "type": "product" }`, with the answer being the product code.
-- **Device impact:** low to medium. The renderer must register the same definition (`src/surveyjs/customQuestions.js`), or it can't draw the question.
+- **Device impact:** low to medium. The renderer must register the same definition (with `ComponentCollection`), or it can't draw the question.
 - **Benefit:** the configuration lives in one place, so a catalogue change doesn't need every form edited, and authors can't misconfigure it.
 - **Next step:** load choices from the backend (`choicesByUrl`) instead of hard-coding them.
 
-### 3. Composite questions (Price Check)
+### 3. Composite questions (Price Check; removed)
 
-A **new question type** that groups several fields into one question: product, shelf price, promo price, and "is the price tag correct?".
+A **new question type** that groups several fields into one question. Price Check grouped product, shelf price, promo price, and "is the price tag correct?".
 
 - **Saved as:** `{ "type": "pricecheck" }`, with the answer being `{ product, shelfPrice, promoPrice, tagCorrect }`.
 - **Device impact:** medium. Same registration requirement as Specialized, and the device must handle an object-shaped answer.

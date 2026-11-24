@@ -62,15 +62,9 @@
         }
       },
       {
-        "name": "product"
-      },
-      {
-        "name": "pricecheck"
-      },
-      {
         "name": "merchsurvey",
         "title": "Merchandising Survey",
-        "iconName": "icon-toolbox-matrixdropdown-24x24",
+        "iconName": "icon-toolbox-merchsurvey-24x24",
         "json": {
           "type": "matrixdropdown",
           "title": "Merchandising Survey",
@@ -108,7 +102,7 @@
       {
         "name": "shopperquestionnaire",
         "title": "Shopper Questionnaire",
-        "iconName": "icon-toolbox-paneldynamic-24x24",
+        "iconName": "icon-toolbox-shopperquestionnaire-24x24",
         "json": {
           "type": "paneldynamic",
           "title": "Shopper Questionnaire",
@@ -169,26 +163,6 @@
             }
           ]
         }
-      },
-      {
-        "name": "stockcount",
-        "title": "Stock Count",
-        "iconName": "icon-toolbox-matrixdynamic-24x24",
-        "json": {
-          "type": "matrixdynamic",
-          "title": "Capture counts",
-          "productRelated": true,
-          "productMode": "matrix",
-          "rowCount": 0,
-          "allowAddRows": false,
-          "allowRemoveRows": false,
-          "columns": [
-            { "name": "product", "title": "Product", "cellType": "text", "readOnly": true },
-            { "name": "units", "title": "Units", "cellType": "text", "inputType": "number", "min": 0, "step": 1, "isRequired": true },
-            { "name": "cases", "title": "Cases", "cellType": "text", "inputType": "number", "min": 0, "step": 1, "isRequired": true },
-            { "name": "pallets", "title": "Pallets", "cellType": "text", "inputType": "number", "min": 0, "step": 1, "isRequired": true }
-          ]
-        }
       }
     ],
     "categories": [
@@ -196,24 +170,21 @@
         "category": "general",
         "items": [
           "text",
+          "number",
           "comment",
           "checkbox",
           "radiogroup",
           "dropdown",
           "boolean",
-          "rating"
+          "rating",
+          "photo"
         ]
       },
       {
         "category": "custom",
         "items": [
-          "number",
-          "photo",
-          "product",
-          "pricecheck",
           "merchsurvey",
-          "shopperquestionnaire",
-          "stockcount"
+          "shopperquestionnaire"
         ]
       }
     ]

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ComponentCollection, SvgRegistry } from 'survey-core'
+import { SvgRegistry } from 'survey-core'
 import { UIPreset } from 'survey-creator-core'
 import { SurveyCreator, SurveyCreatorComponent } from 'survey-creator-react'
 import { PlainLight } from 'survey-core/themes'
@@ -47,6 +47,18 @@ const updateTemplateTitles = (creator, question) => {
 SvgRegistry.registerIcon(
   'icon-toolbox-number-24x24',
   '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 8.25H20V9.75H4ZM4 14.25H20V15.75H4ZM9.25 4H10.75L8.75 20H7.25ZM15.25 4H16.75L14.75 20H13.25Z"/></svg>',
+)
+
+// Merchandising Survey: a shelf stocked with products.
+SvgRegistry.registerIcon(
+  'icon-toolbox-merchsurvey-24x24',
+  '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 3H4.5V21H3ZM19.5 3H21V21H19.5ZM4.5 10.25H19.5V11.75H4.5ZM4.5 19.5H19.5V21H4.5ZM6 5H9V10.25H6ZM11 6.5H14V10.25H11ZM15.5 4H18V10.25H15.5ZM6 14.5H10V19.5H6ZM12 13H15.5V19.5H12Z"/></svg>',
+)
+
+// Shopper Questionnaire: a shopping bag with a tick.
+SvgRegistry.registerIcon(
+  'icon-toolbox-shopperquestionnaire-24x24',
+  '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 8H20L19 21H5ZM5.6 9.5H18.4L17.6 19.5H6.4Z"/><path d="M8.25 8V6.5A3.75 3.75 0 0 1 15.75 6.5V8H14.25V6.5A2.25 2.25 0 0 0 9.75 6.5V8ZM9 14.2 10.06 13.14 11.25 14.33 13.94 11.64 15 12.7 11.25 16.45Z"/></svg>',
 )
 
 // Icon for the "Select products" action beside a dropdown's Choices.
@@ -135,10 +147,9 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
       const taken = new Set(sender.survey.getAllQuestions().map((q) => q.name))
       const question = options.question
       question.name = newQuestionName(taken)
-      // Without a title the form shows the (random) name. Custom types keep their own default title.
+      // Without a title the form shows the (random) name.
       const isCopy = options.reason === 'ELEMENT_COPIED'
-      const isCustomType = !!ComponentCollection.Instance.getCustomQuestionByName(question.getType())
-      if (!isCopy && !isCustomType && !question.locTitle.getJson()) question.title = DEFAULT_TITLE
+      if (!isCopy && !question.locTitle.getJson()) question.title = DEFAULT_TITLE
       updateTemplateTitles(sender, question)
     })
     // e.g. "preview" when opened from the list's "Open Preview" link.

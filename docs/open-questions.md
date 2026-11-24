@@ -39,7 +39,7 @@ How a photo is captured and stored on the device is the mobile team's work and o
 
 ## 5. Which custom questions ship
 
-The POC has Number, Photo, Product and Price Check. Which of these the real app offers is not decided. The completion team (mobile) renders Forms with custom rendering, so we only offer questions they can render. To be settled with them. Fully custom types (e.g. barcode scan) are out of scope.
+The POC has Number, Photo, Merchandising Survey and Shopper Questionnaire. Which of these the real app offers is not decided. The completion team (mobile) renders Forms with custom rendering, so we only offer questions they can render. To be settled with them. Fully custom types (e.g. barcode scan) are out of scope.
 
 ## 6. Question naming
 
