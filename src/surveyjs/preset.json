@@ -58,7 +58,8 @@
           "acceptedCategories": [
             "image"
           ],
-          "sourceType": "file-camera"
+          "sourceType": "file-camera",
+          "maxFiles": 5
         }
       },
       {
@@ -148,6 +149,7 @@
         "json": {
           "type": "paneldynamic",
           "title": "Shopper Questionnaire",
+          "shopperQuestionnaire": true,
           "templateTitle": "{panel.product}",
           "panelCount": 1,
           "minPanelCount": 1,
@@ -244,10 +246,7 @@
           "properties": [
             "title",
             "description",
-            "isRequired",
-            "productRelated",
-            "productRefs",
-            "productMode"
+            "isRequired"
           ]
         },
         "matrixdropdown": {
@@ -257,7 +256,16 @@
         },
         "matrixdynamic": {
           "properties": [
-            "merchProductRefs"
+            "merchProductRefs",
+            "minRowCount",
+            "maxRowCount"
+          ]
+        },
+        "paneldynamic": {
+          "properties": [
+            "shopperProductRefs",
+            "minPanelCount",
+            "maxPanelCount"
           ]
         },
         "comment": {
@@ -275,9 +283,7 @@
           "properties": [
             "sourceType",
             "allowMultiple",
-            "acceptedCategories",
-            "acceptedTypes",
-            "maxSize"
+            "maxFiles"
           ]
         },
         "selectbase": {
@@ -295,11 +301,9 @@
         },
         "text": {
           "properties": [
-            "inputType",
             "placeholder",
             "min",
-            "max",
-            "step"
+            "max"
           ]
         },
         "boolean": {

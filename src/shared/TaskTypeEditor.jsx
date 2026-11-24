@@ -24,7 +24,6 @@ function buildPayload(engine, values, schema, existing) {
   }
   if (values.function === 'PDF') payload.attachment = values.attachment
   if (values.function === 'FORM') payload.form = engine.buildForm(existing?.form, schema)
-  if (values.function === 'STOCK_COUNT') payload.form = existing?.form ?? engine.buildStockCountForm()
   if (values.function === 'INSTRUCTION') payload.form = existing?.form ?? engine.buildInstructionForm()
   if (existing) {
     // Name and function are locked after creation.
@@ -140,14 +139,9 @@ export default function TaskTypeEditor() {
   const locked = !isNew
   const nameFixed = locked || SINGLE_INSTANCE.includes(values.function)
   const isForm = values.function === 'FORM'
-  const immutable = values.function === 'STOCK_COUNT'
   // Read-only view of a function's fixed form.
-  const fixedForm = immutable
-    ? {
-        schema: existing?.form?.schema ?? engine.buildStockCountForm().schema,
-        note: 'This form is fixed and read-only. Products are chosen when a task is created; only the status can be edited.',
-      }
-    : values.function === 'INSTRUCTION' && engine.buildInstructionForm
+  const fixedForm =
+    values.function === 'INSTRUCTION' && engine.buildInstructionForm
       ? {
           schema: existing?.form?.schema ?? engine.buildInstructionForm().schema,
           note: 'This form is fixed and read-only. The instruction text and which responses (Done, Text, Photo) are shown are chosen when a task is created; the other responses are hidden for that task.',
@@ -193,7 +187,7 @@ export default function TaskTypeEditor() {
           <Field label="Function">
             <select className={inputCls} value={values.function} onChange={changeFunction} disabled={locked}>
               {Object.entries(FUNCTIONS)
-                .filter(([code]) => (code !== 'INSTRUCTION' || engine.buildInstructionForm) && (code !== 'STOCK_COUNT' || engine.buildStockCountForm))
+                .filter(([code]) => code !== 'INSTRUCTION' || engine.buildInstructionForm)
                 .map(([code, label]) => (
                 <option
                   key={code}
@@ -212,10 +206,10 @@ export default function TaskTypeEditor() {
             </select>
           </Field>
           <Field label="Days Prior to Due Date">
-            <input type="number" min="0" className={inputCls} value={values.daysPriorToDueDate} onChange={set('daysPriorToDueDate')} disabled={immutable && locked} />
+            <input type="number" min="0" className={inputCls} value={values.daysPriorToDueDate}             onChange={set('daysPriorToDueDate')} />
           </Field>
           <Field label="Days to Expiry">
-            <input type="number" min="0" className={inputCls} value={values.daysToExpiry} onChange={set('daysToExpiry')} disabled={immutable && locked} />
+            <input type="number" min="0" className={inputCls} value={values.daysToExpiry}             onChange={set('daysToExpiry')} />
           </Field>
           {values.function === 'PDF' && (
             <Field label={`Attachment (PDF, max 2 MB)${values.attachment ? ` - current: ${values.attachment.fileName}` : ''}`}>

@@ -17,11 +17,11 @@ The POC increments `form.version` when a Form Schema changes (see ADR 0001). It 
 
 ## 2. How product choices are sent to the device
 
-The POC copies the full array of chosen products into the Task (`productBindings`), so later catalogue changes don't alter the Task.
+Products are chosen only on the Task Type, and the chosen products are written into the Form Schema (as Merchandising Survey rows, or dropdown choices). Tasks carry no products, so a Task always uses its Form Version's products.
 
-- **Problem.** If a Form relates to a whole product line, the Task could carry hundreds of products. That is too heavy to send down.
+- **Problem.** If a Form relates to a whole product line, the Form Schema could carry hundreds of products. That is too heavy to send down.
 - **Alternative.** Send the product line name, or the tags or categories that make up the line, and resolve them to products on the device or server.
-- **Trade-off to settle.** The snapshot gives stable history but is large. References are small, but the resolved product list can change after the Task is created. The answer also affects reporting.
+- **Trade-off to settle.** The snapshot gives stable history but is large. References are small, but the resolved product list can change after the Form is saved. The answer also affects reporting.
 - Not decided.
 
 ## 3. Product Master Data API
@@ -30,8 +30,8 @@ The catalogue comes from an external system, Product Master Data, per Company Co
 
 - **Endpoint and data shape.** Not confirmed: the endpoint, the structure of the data, and how much data comes back.
 - **One call or two.** Product Master Data stores every Product with all its Tags, and its own clients fetch everything and build the Tag list in the client. Do we need one call for the Tags and a second for Products by Tag, or is one call enough?
-- **Dynamic Tags.** Tag labels (manufacturer, product line, catalogue, variant) and their values are controlled by Product Master Data. The designer and Task creation screens must render them dynamically, never hard-code them.
-- **Links to item 2.** Whether Tasks carry products or Tag references depends on what this API can return efficiently.
+- **Dynamic Tags.** Tag labels (manufacturer, product line, catalogue, variant) and their values are controlled by Product Master Data. The designer must render them dynamically, never hard-code them.
+- **Links to item 2.** Whether Forms carry products or Tag references depends on what this API can return efficiently.
 
 ## 4. Photos from the device to the microservice
 
@@ -49,5 +49,5 @@ Each question has a `name` that keys its answer. Two options: a randomly generat
 
 - Task Type name and Function are locked after creation. Status is ACTIVE or INACTIVE; an INACTIVE Task Type can't get new Tasks, and existing Tasks stay fillable. This is unchanged from the existing system.
 - Version 1 has no conditional logic. The only validator is the required flag; the Form Schema must not contain others.
-- Product choices use Tag filtering in both places: the Task Type's default products and the Task's product pick. Whether the result is stored as products or as Tag references is item 2.
+- Products are chosen with Tag filtering, on the Task Type only, and only for the questions that use them (Merchandising Surveys, Shopper Questionnaire, dropdown choices). There is no product step when creating a Task. Whether the result is stored as products or as Tag references is item 2.
 - Reporting is out of scope, apart from the rule that reports key on Task Type plus question name, with labels from the Form Version the answer was captured on.

@@ -1,20 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import engine from '../surveyjs/engine.js'
-import ProductPicker from './ProductPicker.jsx'
-import { productQuestions } from './productQuestions.js'
 import { taskApi } from './taskApi.js'
 import TaskPayloads from './TaskPayloads.jsx'
 import { externalTaskPayload } from './taskPayloads.js'
 import { RESPONSE_TYPES, responseVariables } from '../surveyjs/instructionSchema.js'
 
-const MODE_LABEL = { single: 'One answer for all products', each: 'Repeated for each product', matrix: 'One row per product' }
-
 export default function TaskCreate() {
   const navigate = useNavigate()
   const [taskTypes, setTaskTypes] = useState(null)
   const [taskTypeId, setTaskTypeId] = useState('')
-  const [bindings, setBindings] = useState({})
   const [error, setError] = useState(null)
   const [saving, setSaving] = useState(false)
   const [instruction, setInstruction] = useState('')
@@ -28,40 +23,27 @@ export default function TaskCreate() {
 
   const taskType = taskTypes?.find((t) => t.id === Number(taskTypeId))
   const isInstruction = taskType?.function === 'INSTRUCTION'
-  const questions = useMemo(
-    () => (taskType?.form?.schema ? productQuestions(taskType.form.schema) : []),
-    [taskType],
-  )
 
   const choose = (id) => {
     setTaskTypeId(id)
     setError(null)
-    const next = taskTypes?.find((t) => t.id === Number(id))
-    const defaults = next?.form?.schema ? productQuestions(next.form.schema) : []
-    setBindings(Object.fromEntries(defaults.map((q) => [q.name, q.defaultProducts])))
   }
 
-  // Snapshot the products so the Task doesn't change if the catalogue does.
   const payload = useMemo(
     () =>
       taskType && {
         taskTypeId: taskType.id,
         taskTypeName: taskType.name,
         formVersion: taskType.form?.version ?? null,
-        productBindings: Object.fromEntries(
-          questions.map((q) => [q.name, { mode: q.mode, products: bindings[q.name] ?? [] }]),
-        ),
         ...(isInstruction && { instruction: { text: instruction.trim(), variables: responseVariables(responses) } }),
       },
-    [taskType, questions, bindings, isInstruction, instruction, responses],
+    [taskType, isInstruction, instruction, responses],
   )
 
   const save = async () => {
-    const missing = questions.filter((q) => !bindings[q.name]?.length)
     if (!taskType) return setError('Choose a task type')
     if (isInstruction && !instruction.trim()) return setError('Enter the instruction')
     if (isInstruction && responses.length === 0) return setError('Choose at least one response type')
-    if (missing.length) return setError(`Choose products for: ${missing.map((q) => q.title).join(', ')}`)
     setSaving(true)
     try {
       await taskApi.create(payload)
@@ -113,10 +95,6 @@ export default function TaskCreate() {
           </select>
         </label>
 
-        {taskType && questions.length === 0 && !isInstruction && (
-          <p className="text-sm text-slate-500">This task type has no product-specific questions.</p>
-        )}
-
         {isInstruction && (
           <div className="space-y-4">
             <label className="block text-sm">
@@ -140,29 +118,6 @@ export default function TaskCreate() {
                 ))}
               </div>
             </fieldset>
-          </div>
-        )}
-
-        {questions.length > 0 && (
-          <div className="space-y-4">
-            <p className="text-sm text-slate-500">
-              These questions relate to products. Products set by the task type are fixed; choose them for the rest.
-            </p>
-            {questions.map((q) => (
-              <div key={q.name}>
-                <p className="mb-1 text-sm font-medium">
-                  {q.title}
-                  <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-normal text-slate-600">
-                    {MODE_LABEL[q.mode]}
-                  </span>
-                </p>
-                <ProductPicker
-                  value={bindings[q.name]}
-                  onChange={(v) => setBindings((b) => ({ ...b, [q.name]: v }))}
-                  locked={q.defaultProducts.length > 0}
-                />
-              </div>
-            ))}
           </div>
         )}
 

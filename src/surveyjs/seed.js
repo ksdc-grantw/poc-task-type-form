@@ -1,6 +1,4 @@
 import { BASE_SEED } from '../shared/baseSeed.js'
-import { findProducts } from '../products/productApi.js'
-import { buildStockCountForm } from './stockCountSchema.js'
 import { buildInstructionForm } from './instructionSchema.js'
 
 export const SEED = [
@@ -113,9 +111,6 @@ export const SEED = [
                 name: 'shelfPhotos',
                 title: 'Shelf photos',
                 description: 'Up to 5 photos, one per bay.',
-                productRelated: true,
-                productRefs: findProducts([1]),
-                productMode: 'single',
                 isRequired: true,
                 allowMultiple: true,
                 photoOnly: true, acceptedCategories: ['image'],
@@ -127,9 +122,6 @@ export const SEED = [
                 name: 'lineDisplayPhotos',
                 title: 'Product line display',
                 description: 'The whole range, side by side.',
-                productRelated: true,
-                productRefs: findProducts([16, 18, 20, 22]),
-                productMode: 'each',
                 allowMultiple: true,
                 photoOnly: true, acceptedCategories: ['image'],
                 sourceType: 'camera',
@@ -139,14 +131,11 @@ export const SEED = [
                 name: 'customerPhotos',
                 title: 'Customer photos',
                 description: 'Only if the customer agreed.',
-                productRelated: true,
-                productRefs: findProducts([1, 2, 25, 27]),
-                productMode: 'single',
                 allowMultiple: true,
                 photoOnly: true, acceptedCategories: ['image'],
                 sourceType: 'camera',
               },
-              { type: 'comment', name: 'shelfShareNotes', title: 'Shelf share notes', description: 'Products are chosen when the task is created.', productRelated: true, productMode: 'single' },
+              { type: 'comment', name: 'shelfShareNotes', title: 'Shelf share notes' },
               { type: 'comment', name: 'notes', title: 'Notes' },
             ],
           },
@@ -195,14 +184,5 @@ export const SEED = [
     daysPriorToDueDate: 0,
     daysToExpiry: 2,
     form: buildInstructionForm(),
-  },
-  {
-    id: 11,
-    name: 'Stock Count',
-    function: 'STOCK_COUNT',
-    status: 'ACTIVE',
-    daysPriorToDueDate: 0,
-    daysToExpiry: 2,
-    form: buildStockCountForm(),
   },
 ]

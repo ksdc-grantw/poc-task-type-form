@@ -2,9 +2,8 @@ import { lazy } from 'react'
 import { Version as SURVEYJS_VERSION } from 'survey-core'
 import { createTaskTypeApi } from '../shared/createTaskTypeApi.js'
 import { buildInstructionForm } from './instructionSchema.js'
-import { buildStockCountForm } from './stockCountSchema.js'
 
-export const TASK_TYPES_KEY = 'poc.taskTypes.v18'
+export const TASK_TYPES_KEY = 'poc.taskTypes.v19'
 const api = createTaskTypeApi({ storageKey: TASK_TYPES_KEY, seed: [] })
 
 function countQuestions(schema) {
@@ -38,7 +37,6 @@ const engine = {
   countQuestions,
   buildForm,
   buildInstructionForm,
-  buildStockCountForm,
 }
 
 export default engine

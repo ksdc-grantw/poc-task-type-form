@@ -46,36 +46,24 @@ export default function TaskList() {
                 </td>
               </tr>
             )}
-            {tasks?.map((t) => {
-              const bound = Object.values(t.productBindings ?? {})
-              return (
-                <tr key={t.id}>
-                  <td className="px-4 py-2 font-medium">{t.taskTypeName}</td>
-                  <td className="px-4 py-2">
-                    {bound.length === 0 && !t.instruction && <span className="text-slate-400">—</span>}
-                    {t.instruction && <p className="whitespace-pre-line">{t.instruction.text}</p>}
-                    {bound.length > 0 && (
-                      <ul className="space-y-0.5">
-                        {bound.map((b, i) => (
-                          <li key={i}>
-                            {b.products.map((x) => x.description).join(', ')}{' '}
-                            <span className="text-slate-400">
-                              ({b.products.length} product{b.products.length === 1 ? '' : 's'}, {b.mode})
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </td>
-                  <td className="px-4 py-2 text-slate-500">{new Date(t.createdAt).toLocaleString()}</td>
-                  <td className="px-4 py-2 text-right">
-                    <Link to={`/tasks/${t.id}`} className="text-blue-600 hover:underline">
-                      Open Preview
-                    </Link>
-                  </td>
-                </tr>
-              )
-            })}
+            {tasks?.map((t) => (
+              <tr key={t.id}>
+                <td className="px-4 py-2 font-medium">{t.taskTypeName}</td>
+                <td className="px-4 py-2">
+                  {t.instruction ? (
+                    <p className="whitespace-pre-line">{t.instruction.text}</p>
+                  ) : (
+                    <span className="text-slate-400">—</span>
+                  )}
+                </td>
+                <td className="px-4 py-2 text-slate-500">{new Date(t.createdAt).toLocaleString()}</td>
+                <td className="px-4 py-2 text-right">
+                  <Link to={`/tasks/${t.id}`} className="text-blue-600 hover:underline">
+                    Open Preview
+                  </Link>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

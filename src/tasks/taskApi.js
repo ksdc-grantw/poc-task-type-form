@@ -1,14 +1,12 @@
-export const TASKS_KEY = 'poc.tasks.v8'
+export const TASKS_KEY = 'poc.tasks.v9'
 const KEY = TASKS_KEY
 const delay = (ms = 150) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const read = () => JSON.parse(localStorage.getItem(KEY) ?? '[]')
 const write = (tasks) => localStorage.setItem(KEY, JSON.stringify(tasks))
 
-// Mock backend for Tasks. A Task is a task type plus (for FORM types) the product chosen
-// for each product-specific question:
-// productBindings[questionName] = { mode: 'single' | 'each', products: [...] }
-// where products is a snapshot of the chosen product objects.
+// Mock backend for Tasks. A Task is a task type, the form version it was created against and,
+// for INSTRUCTION types, the instruction.
 export const taskApi = {
   async list() {
     await delay()

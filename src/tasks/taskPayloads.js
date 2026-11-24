@@ -3,8 +3,7 @@
 // The record the Tasks backend stores is the POST /tasks body itself (plus id and createdAt once saved).
 
 // What an external system would receive for a Task: self-contained, so it can render the Task
-// without a second lookup. The Form Schema stays opaque (ADR 0002); products are reduced to
-// { id, description } because Product Master Data owns the rest.
+// without a second lookup. The Form Schema stays opaque (ADR 0002).
 export function externalTaskPayload(task, taskType) {
   const form = taskType?.form && {
     engine: taskType.form.engine ?? 'surveyjs',
@@ -22,11 +21,5 @@ export function externalTaskPayload(task, taskType) {
     },
     ...(form && { form }),
     ...(task.instruction && { instruction: task.instruction }),
-    productBindings: Object.fromEntries(
-      Object.entries(task.productBindings ?? {}).map(([name, b]) => [
-        name,
-        { mode: b.mode, products: b.products.map((p) => ({ id: p.id, description: p.description })) },
-      ]),
-    ),
   }
 }

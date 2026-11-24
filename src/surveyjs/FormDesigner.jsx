@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { SvgRegistry } from 'survey-core'
+import { Serializer, SvgRegistry } from 'survey-core'
 import { UIPreset } from 'survey-creator-core'
 import { SurveyCreator, SurveyCreatorComponent } from 'survey-creator-react'
 import { PlainLight } from 'survey-core/themes'
@@ -9,13 +9,23 @@ import preset from './preset.json'
 import './customQuestions.js'
 import './productRefEditor.js'
 import { setMerchProducts } from './merchSurvey.js'
+import { setShopperProducts } from './shopperQuestionnaire.js'
 import ProductPickerModal from '../products/ProductPickerModal.jsx'
 import { findProducts } from '../products/productApi.js'
 
 // Tabs, toolbox, property grid and options all come from the UI preset.
 const uiPreset = new UIPreset(preset)
 
-const PHOTO_LOCKED_PROPERTIES = ['acceptedCategories', 'acceptedTypes']
+// Only the Dynamic Merchandising Survey and Shopper Questionnaire offer the min/max counts, so
+// name them for products; file questions are only ever Photos.
+const PROPERTY_DISPLAY_NAMES = {
+  matrixdynamic: { minRowCount: 'Minimum products', maxRowCount: 'Maximum products' },
+  paneldynamic: { minPanelCount: 'Minimum products', maxPanelCount: 'Maximum products' },
+  file: { maxFiles: 'Maximum photos' },
+}
+for (const [type, names] of Object.entries(PROPERTY_DISPLAY_NAMES)) {
+  for (const [name, displayName] of Object.entries(names)) Serializer.findProperty(type, name).displayName = displayName
+}
 
 // Question names are random IDs, generated once and never edited (the name field is hidden
 // in the preset). The designer's default (lowest unused number) reuses names after a
@@ -73,14 +83,10 @@ SvgRegistry.registerIcon(
   '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 3 6.5V17.5L12 22 21 17.5V6.5ZM12 3.68 18.94 7.15 12 10.62 5.06 7.15ZM4.5 8.36 11.25 11.74V20.04L4.5 16.66ZM12.75 20.04V11.74L19.5 8.36V16.66Z"/></svg>',
 )
 
-// Dropdowns take their products as choices, so the product-binding settings don't apply.
-const DROPDOWN_HIDDEN_PROPERTIES = ['productRelated', 'productRefs', 'productMode']
-
-const clearProductRefs = (question) => setProductRefs(question, [])
-
-const setProductRefs = (question, refs) => {
-  if (question.merchSurvey) setMerchProducts(question, refs)
-  else question.productRefs = refs
+// The Merchandising Surveys and Shopper Questionnaire each keep their chosen products in their own property.
+const PRODUCT_REFS = {
+  merchProductRefs: setMerchProducts,
+  shopperProductRefs: setShopperProducts,
 }
 
 // Replaces a dropdown's choices with the products: value is the product id, text its description.
@@ -89,8 +95,8 @@ const setProductChoices = (question, products) => {
 }
 
 export default function FormDesigner({ initialSchema, initialTab, onChange, readOnly = false }) {
-  // The question whose default product is being chosen in the modal.
-  const [pickerQuestion, setPickerQuestion] = useState(null)
+  // The products property being chosen in the modal: { question, property }.
+  const [picker, setPicker] = useState(null)
   // The dropdown whose choices are being replaced with products chosen in the modal.
   const [choicesQuestion, setChoicesQuestion] = useState(null)
   const [creator] = useState(() => {
@@ -110,38 +116,17 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
         })
         return
       }
-      if (!['productRefs', 'merchProductRefs'].includes(options.property.name)) return
+      const property = options.property.name
+      const setProducts = PRODUCT_REFS[property]
+      if (!setProducts) return
       const question = options.obj
       options.titleActions.push(
-        { id: 'select-product', title: 'Select...', action: () => setPickerQuestion(question) },
-        { id: 'clear-product', title: 'Clear', action: () => clearProductRefs(question) },
+        { id: 'select-product', title: 'Select...', action: () => setPicker({ question, property }) },
+        { id: 'clear-product', title: 'Clear', action: () => setProducts(question, []) },
       )
-    })
-    // Switching "Related to Product" on defaults the mode; off clears the product settings.
-    c.onModified.add((_, options) => {
-      if (options.name !== 'productRelated') return
-      const question = options.target
-      if (question.productRelated) {
-        if (!question.productMode) question.productMode = 'single'
-      } else if (question.productRefs?.length || question.productMode) {
-        question.productRefs = []
-        question.productMode = undefined
-      }
     })
     // Fixed Creator UI theme; the "Creator Settings" (gear) button is hidden above.
     c.applyCreatorTheme(PlainLight)
-    // Photo questions are always images only, so hide the file-type settings for them.
-    c.onPropertyShowing.add((_, options) => {
-      if (options.element.merchSurvey && ['productRelated', 'productRefs', 'productMode'].includes(options.property.name)) {
-        options.show = false
-      }
-      if (options.element.getType() === 'dropdown' && DROPDOWN_HIDDEN_PROPERTIES.includes(options.property.name)) {
-        options.show = false
-      }
-      if (options.element.photoOnly && PHOTO_LOCKED_PROPERTIES.includes(options.property.name)) {
-        options.show = false
-      }
-    })
     if (initialSchema) c.JSON = initialSchema
     // Also used for questions nested in a toolbox item or copy (e.g. a dynamic panel's template).
     c.getNewQuestionName = () =>
@@ -173,13 +158,13 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
   return (
     <div className="h-full w-full">
       <SurveyCreatorComponent creator={creator} />
-      {pickerQuestion && (
+      {picker && (
         <ProductPickerModal
-          initial={pickerQuestion.merchSurvey ? pickerQuestion.merchProductRefs : pickerQuestion.productRefs}
-          onClose={() => setPickerQuestion(null)}
+          initial={picker.question[picker.property]}
+          onClose={() => setPicker(null)}
           onSelect={(items) => {
-            setProductRefs(pickerQuestion, items)
-            setPickerQuestion(null)
+            PRODUCT_REFS[picker.property](picker.question, items)
+            setPicker(null)
           }}
         />
       )}
