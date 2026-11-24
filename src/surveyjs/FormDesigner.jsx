@@ -30,6 +30,19 @@ const newQuestionName = (taken) => {
   return name
 }
 
+// When a dynamic panel is added or copied, the Creator renames every question in its template
+// (using getNewQuestionName, so they get random IDs too) and updates expressions, but not the
+// "{panel.name}" references in the panel titles. newQuestionChangedNames (old -> new) is internal
+// to the Creator; if it goes away, the titles keep the old names.
+const updateTemplateTitles = (creator, question) => {
+  const renamed = creator.newQuestionChangedNames
+  if (question.getType() !== 'paneldynamic' || !renamed) return
+  const rename = (text) =>
+    text && text.replace(/\{panel\.([^}.[]+)/g, (match, name) => (renamed[name] ? `{panel.${renamed[name]}` : match))
+  question.templateTitle = rename(question.templateTitle)
+  question.templateTabTitle = rename(question.templateTabTitle)
+}
+
 // The Creator has no built-in number icon, so the "Number" toolbox item uses this "#" icon.
 SvgRegistry.registerIcon(
   'icon-toolbox-number-24x24',
@@ -112,6 +125,9 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
       }
     })
     if (initialSchema) c.JSON = initialSchema
+    // Also used for questions nested in a toolbox item or copy (e.g. a dynamic panel's template).
+    c.getNewQuestionName = () =>
+      newQuestionName(new Set([...c.getAllQuestions(), ...c.getAllPanels()].map((el) => el.name)))
     // Converting a question's type keeps its name; every other way of adding gets a new ID
     // (copies must not share their original's name).
     c.onQuestionAdded.add((sender, options) => {
@@ -123,6 +139,7 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
       const isCopy = options.reason === 'ELEMENT_COPIED'
       const isCustomType = !!ComponentCollection.Instance.getCustomQuestionByName(question.getType())
       if (!isCopy && !isCustomType && !question.locTitle.getJson()) question.title = DEFAULT_TITLE
+      updateTemplateTitles(sender, question)
     })
     // e.g. "preview" when opened from the list's "Open Preview" link.
     if (initialTab) c.activeTab = initialTab

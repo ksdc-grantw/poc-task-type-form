@@ -106,6 +106,71 @@
         }
       },
       {
+        "name": "shopperquestionnaire",
+        "title": "Shopper Questionnaire",
+        "iconName": "icon-toolbox-paneldynamic-24x24",
+        "json": {
+          "type": "paneldynamic",
+          "title": "Shopper Questionnaire",
+          "templateTitle": "{panel.product}",
+          "panelCount": 1,
+          "minPanelCount": 1,
+          "addPanelText": "Add product",
+          "templateElements": [
+            { "type": "dropdown", "name": "product", "title": "Product", "isRequired": true, "choices": [] },
+            {
+              "type": "rating",
+              "name": "liking",
+              "title": "How much did you like this product?",
+              "rateMin": 1,
+              "rateMax": 5,
+              "minRateDescription": "Disliked it a lot",
+              "maxRateDescription": "Liked it a lot"
+            },
+            {
+              "type": "dropdown",
+              "name": "likeMost",
+              "title": "What do you like the MOST about this product?",
+              "choices": ["The Smell", "The Chilli Taste", "The Saltiness", "The Colour"],
+              "showOtherItem": true
+            },
+            {
+              "type": "dropdown",
+              "name": "likeLeast",
+              "title": "What do you like the LEAST about this product?",
+              "choices": ["The Smell", "The Chilli Taste", "The Saltiness", "The Colour"],
+              "showOtherItem": true
+            },
+            {
+              "type": "rating",
+              "name": "texture",
+              "title": "How would you rate the texture of this product?",
+              "rateMin": 1,
+              "rateMax": 5,
+              "minRateDescription": "Very soft",
+              "maxRateDescription": "Very hard"
+            },
+            { "type": "text", "name": "textureDislike", "title": "What do you like the least about the texture of this product?" },
+            {
+              "type": "dropdown",
+              "name": "serving",
+              "title": "How are you serving this product?",
+              "choices": ["With rice", "With pap", "With paste", "With samp", "As a thickener"],
+              "showOtherItem": true
+            },
+            {
+              "type": "rating",
+              "name": "recommend",
+              "title": "How likely are you to recommend this product to a friend?",
+              "rateMin": 1,
+              "rateMax": 10,
+              "minRateDescription": "Very unlikely",
+              "maxRateDescription": "Very likely"
+            }
+          ]
+        }
+      },
+      {
         "name": "stockcount",
         "title": "Stock Count",
         "iconName": "icon-toolbox-matrixdynamic-24x24",
@@ -147,6 +212,7 @@
           "product",
           "pricecheck",
           "merchsurvey",
+          "shopperquestionnaire",
           "stockcount"
         ]
       }
