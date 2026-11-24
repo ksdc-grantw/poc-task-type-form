@@ -207,6 +207,44 @@
             }
           ]
         }
+      },
+      {
+        "name": "phototag",
+        "title": "Photo and Tag",
+        "iconName": "icon-toolbox-phototag-24x24",
+        "json": {
+          "type": "panel",
+          "title": "Photo and Tag",
+          "photoTag": true,
+          "elements": [
+            {
+              "type": "file",
+              "name": "photo",
+              "title": "Photo",
+              "photoOnly": true,
+              "acceptedCategories": ["image"],
+              "sourceType": "file-camera",
+              "allowMultiple": true,
+              "maxFiles": 5
+            },
+            {
+              "type": "checkbox",
+              "name": "tags",
+              "title": "Tags",
+              "choices": [
+                { "value": "sf", "text": "Good shelf space" },
+                { "value": "item2", "text": "Bad shelf space" },
+                { "value": "item3", "text": "No stock" },
+                { "value": "item4", "text": "Not ranged in store" },
+                { "value": "item5", "text": "Category not sold in store" },
+                { "value": "item6", "text": "Promotion – own product" },
+                { "value": "item7", "text": "Promotion – competitor product" },
+                { "value": "item8", "text": "New product – own product" },
+                { "value": "item9", "text": "New product – competitor product" }
+              ]
+            }
+          ]
+        }
       }
     ],
     "categories": [
@@ -229,7 +267,8 @@
         "items": [
           "merchsurvey",
           "dynamicmerchsurvey",
-          "shopperquestionnaire"
+          "shopperquestionnaire",
+          "phototag"
         ]
       }
     ]
@@ -247,6 +286,12 @@
             "title",
             "description",
             "isRequired"
+          ]
+        },
+        "panel": {
+          "properties": [
+            "title",
+            "description"
           ]
         },
         "matrixdropdown": {
@@ -339,7 +384,7 @@
     "minChoices": 0,
     "maxChoices": 0,
     "maxVisibleChoices": 10,
-    "maxChoiceContentNestingLevel": 2,
+    "maxChoiceContentNestingLevel": 0,
     "maxRateValues": 0,
     "maxPanelNestingLevel": -1,
     "expressionsValidateFunctions": true,

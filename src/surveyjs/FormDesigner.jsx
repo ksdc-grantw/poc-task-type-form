@@ -10,6 +10,7 @@ import './customQuestions.js'
 import './productRefEditor.js'
 import { setMerchProducts } from './merchSurvey.js'
 import { setShopperProducts } from './shopperQuestionnaire.js'
+import { isInPhotoTag, isPhotoTag } from './photoTag.js'
 import ProductPickerModal from '../products/ProductPickerModal.jsx'
 import { findProducts } from '../products/productApi.js'
 
@@ -75,6 +76,12 @@ SvgRegistry.registerIcon(
 SvgRegistry.registerIcon(
   'icon-toolbox-shopperquestionnaire-24x24',
   '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 8H20L19 21H5ZM5.6 9.5H18.4L17.6 19.5H6.4Z"/><path d="M8.25 8V6.5A3.75 3.75 0 0 1 15.75 6.5V8H14.25V6.5A2.25 2.25 0 0 0 9.75 6.5V8ZM9 14.2 10.06 13.14 11.25 14.33 13.94 11.64 15 12.7 11.25 16.45Z"/></svg>',
+)
+
+// Photo and Tag: a camera with a tag.
+SvgRegistry.registerIcon(
+  'icon-toolbox-phototag-24x24',
+  '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2 5H6L7.5 3H12.5L14 5H18V11H16.5V6.5H3.5V13.5H11V15H2ZM10 7A2.5 2.5 0 1 1 10 12A2.5 2.5 0 1 1 10 7Z"/><path fill-rule="evenodd" d="M12.5 12.5H18L22 17L18 21.5H12.5ZM17 16A1 1 0 1 0 17 18A1 1 0 1 0 17 16Z"/></svg>',
 )
 
 // Icon for the "Select products" action beside a dropdown's Choices.
@@ -143,6 +150,31 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
       if (!isCopy && !question.locTitle.getJson()) question.title = DEFAULT_TITLE
       updateTemplateTitles(sender, question)
     })
+    // Photo and Tag holds exactly its Photo and Tags: nothing can be dropped into it, and its two
+    // questions can't be removed, copied, dragged out or converted.
+    c.onDragDropAllow.add((_, options) => {
+      const { target, insertBefore, insertAfter } = options
+      const container = !insertBefore && !insertAfter && target?.isPanel ? target : target?.parent
+      if (isInPhotoTag(container)) options.allow = false
+    })
+    c.onElementAllowOperations.add((_, options) => {
+      // allowEdit: false hides the panel's "Add Question" button (title still editable in the property grid).
+      if (isPhotoTag(options.obj)) options.allowEdit = false
+      if (!isPhotoTag(options.obj?.parent)) return
+      Object.assign(options, { allowDelete: false, allowCopy: false, allowDrag: false, allowDragging: false, allowChangeType: false })
+    })
+    // Anything else that lands inside (toolbox click or paste while a Photo and Tag question is
+    // selected) is moved to just after the panel.
+    const moveOutOfPhotoTag = (element) => {
+      let panel = element.parent
+      while (panel && !isPhotoTag(panel)) panel = panel.parent
+      if (!panel) return
+      element.parent.removeElement(element)
+      panel.parent.addElement(element, panel.parent.elements.indexOf(panel) + 1)
+      c.selectElement(element)
+    }
+    c.onQuestionAdded.add((_, options) => moveOutOfPhotoTag(options.question))
+    c.onPanelAdded.add((_, options) => moveOutOfPhotoTag(options.panel))
     // e.g. "preview" when opened from the list's "Open Preview" link.
     if (initialTab) c.activeTab = initialTab
     return c

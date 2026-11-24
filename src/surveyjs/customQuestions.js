@@ -3,3 +3,4 @@
 import './photoOnly.js'
 import './merchSurvey.js'
 import './shopperQuestionnaire.js'
+import './photoTag.js'
