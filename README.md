@@ -71,7 +71,7 @@ The Creator is wrapped in `src/surveyjs/FormDesigner.jsx`. Configuration is appl
 A Survey Creator 3 UI preset (the format produced by the SurveyJS UI Preset Editor). It controls:
 
 - **Tabs** - only **Designer** and **Preview**. Logic, JSON editor, translations and themes are hidden.
-- **Toolbox** - two categories, separated by a line: **Questions** (Single-Line Input, Long Text, Checkboxes, Radio Button Group, Dropdown, Yes/No) and **Custom** (Number, Photo, Product, Price Check). The custom items show the three ways to extend the toolbox:
+- **Toolbox** - two categories, separated by a line: **Questions** (Single-Line Input, Long Text, Checkboxes, Radio Button Group, Dropdown, Yes/No, Rating) and **Custom** (Number, Photo, Product, Price Check). The custom items show the three ways to extend the toolbox:
   - *Preset items* (Number, Photo) - a toolbox entry with preset JSON for a built-in type. Number creates a `text` question with `inputType: "number"`; its "#" icon is registered with `SvgRegistry` in `src/surveyjs/FormDesigner.jsx` because the Creator has no built-in number icon.
   - *Specialized question* (Product) - a new type `product` that wraps a dropdown with the (mock) product catalogue as fixed choices. Saved as `{ "type": "product" }`; the answer is the product code.
   - *Composite question* (Price Check) - a new type `pricecheck` that groups product, shelf price, promo price and "price tag correct?" into one question. Saved as `{ "type": "pricecheck" }`; the answer is `{ product, shelfPrice, promoPrice, tagCorrect }`.
@@ -80,6 +80,7 @@ A Survey Creator 3 UI preset (the format produced by the SurveyJS UI Preset Edit
   - Photo is a custom `file` question preset to images (`acceptedCategories: ["image"]`) with `sourceType: "file-camera"`, so the agent can pick from the gallery or use the camera; `sourceType` can be changed to `file` or `camera` in the property grid. Photo questions also carry `photoOnly: true`, a custom property registered in `src/surveyjs/photoOnly.js` (imported by both the designer and the preview page); for these questions the accepted file categories/types are hidden in the property grid (`creator.onPropertyShowing`) so they stay images only. Any renderer must register `photoOnly` too (`Serializer.addProperty`).
 - **Property grid** - `autoGenerateProperties: false`, so only the properties listed per class are shown:
   - Questions: `title`, `description`, `isRequired` plus type-specific properties such as `placeholder`, `choices`, `sourceType`. `name` is deliberately not shown (see Question names below).
+  - Rating questions always use labels: `rateType` is preset to `"labels"`, not in the property grid, and the rate type switcher on the design surface is hidden (`creator.onElementAllowOperations` in `src/surveyjs/FormDesigner.jsx`).
   - Survey settings: no properties are exposed.
   - Conditional logic (`visibleIf`, `requiredIf`, ...) is deliberately not exposed.
 - **Options** - designer behaviour. `showSurveyHeader: false` hides the survey title and description on the design surface, because the task type supplies those outside the form. `previewDevice: "androidPhone"` and `previewOrientation: "portrait"` make the Preview tab default to a mobile portrait frame, matching how agents complete forms.

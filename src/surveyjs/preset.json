@@ -32,6 +32,14 @@
         "name": "boolean"
       },
       {
+        "name": "rating",
+        "subitems": [],
+        "json": {
+          "type": "rating",
+          "rateType": "labels"
+        }
+      },
+      {
         "name": "number",
         "title": "Number",
         "json": {
@@ -127,7 +135,8 @@
           "checkbox",
           "radiogroup",
           "dropdown",
-          "boolean"
+          "boolean",
+          "rating"
         ]
       },
       {
@@ -213,6 +222,13 @@
             "labelTrue",
             "labelFalse"
           ]
+        },
+        "rating": {
+          "properties": [
+            "rateCount",
+            "minRateDescription",
+            "maxRateDescription"
+          ]
         }
       },
       "generateOtherTab": false
@@ -225,7 +241,7 @@
     "useElementTitles": false,
     "allowDragPages": true,
     "allowZoom": true,
-    "expandCollapseButtonVisibility": "onhover",
+    "expandCollapseButtonVisibility": "always",
     "collapseQuestions": false,
     "collapsePanels": false,
     "collapsePages": false,
