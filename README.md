@@ -64,6 +64,7 @@ The Creator is wrapped in `src/surveyjs/FormDesigner.jsx`. Configuration is appl
    - `showCreatorThemeSettings: false` - hides the **Creator Settings** (gear) button, so users can't change the Creator theme.
 2. **UI preset** from `src/surveyjs/preset.json`, applied with `new UIPreset(preset).applyTo(creator)`.
 3. **Creator theme** - `creator.applyCreatorTheme(PlainLight)` (from `survey-core/themes`) fixes the Creator UI to the Plain theme.
+   The design surface is made to fill the available width (closing the property grid widens it) with `widthMode: "responsive"`. It is one of the designer-only options (`DESIGNER_ONLY_OPTIONS` in `FormDesigner.jsx`): added to the form JSON when the designer loads and removed from the JSON passed to `onChange`, so it is never saved.
 4. **Saved schema** - `creator.JSON = initialSchema` when editing an existing form.
 
 ### Custom UI preset (`src/surveyjs/preset.json`)

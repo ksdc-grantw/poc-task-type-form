@@ -28,6 +28,17 @@ for (const [type, names] of Object.entries(PROPERTY_DISPLAY_NAMES)) {
   for (const [name, displayName] of Object.entries(names)) Serializer.findProperty(type, name).displayName = displayName
 }
 
+// Form settings applied only while designing, and removed from the JSON handed to onChange
+// (and so never saved). widthMode "responsive" makes the design surface fill the available
+// width instead of the fixed width "auto" picks.
+const DESIGNER_ONLY_OPTIONS = { widthMode: 'responsive' }
+
+const withoutDesignerOnlyOptions = (json) => {
+  const schema = { ...json }
+  for (const key of Object.keys(DESIGNER_ONLY_OPTIONS)) delete schema[key]
+  return schema
+}
+
 // Question names are random IDs, generated once and never edited (the name field is hidden
 // in the preset). The designer's default (lowest unused number) reuses names after a
 // delete, which would let reports confuse an old question with a new one.
@@ -140,7 +151,7 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
     })
     // Fixed Creator UI theme; the "Creator Settings" (gear) button is hidden above.
     c.applyCreatorTheme(PlainLight)
-    if (initialSchema) c.JSON = initialSchema
+    c.JSON = { ...initialSchema, ...DESIGNER_ONLY_OPTIONS }
     // Also used for questions nested in a toolbox item or copy (e.g. a dynamic panel's template).
     c.getNewQuestionName = () =>
       newQuestionName(new Set([...c.getAllQuestions(), ...c.getAllPanels()].map((el) => el.name)))
@@ -187,9 +198,9 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
   })
 
   useEffect(() => {
-    const handler = () => onChange(creator.JSON)
+    const handler = () => onChange(withoutDesignerOnlyOptions(creator.JSON))
     creator.onModified.add(handler)
-    onChange(creator.JSON)
+    handler()
     return () => creator.onModified.remove(handler)
   }, [creator, onChange])
 
