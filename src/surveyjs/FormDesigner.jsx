@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { Serializer, SvgRegistry } from 'survey-core'
-import { UIPreset } from 'survey-creator-core'
+import { useEffect, useRef, useState } from 'react'
+import { Action, Serializer, SvgRegistry } from 'survey-core'
+import { CreatorResponsivityManager, UIPreset } from 'survey-creator-core'
 import { SurveyCreator, SurveyCreatorComponent } from 'survey-creator-react'
 import { PlainLight } from 'survey-core/themes'
 import 'survey-core/survey-core.css'
@@ -101,6 +101,16 @@ SvgRegistry.registerIcon(
   '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2 5H14.5L21.5 12L14.5 19H2ZM3.5 6.5H13.88L19.38 12L13.88 17.5H3.5ZM7 10.5A1.5 1.5 0 1 1 7 13.5A1.5 1.5 0 1 1 7 10.5Z"/></svg>',
 )
 
+// Toolbox toggle: a window with its left column narrowed (collapse) or widened (expand).
+SvgRegistry.registerIcon(
+  'icon-toolbox-collapse',
+  '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2 4H22V20H2ZM3.5 5.5V18.5H8V5.5ZM9.5 5.5V18.5H20.5V5.5ZM15.5 9 12.5 12 15.5 15 16.56 13.94 14.62 12 16.56 10.06Z"/></svg>',
+)
+SvgRegistry.registerIcon(
+  'icon-toolbox-expand',
+  '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2 4H22V20H2ZM3.5 5.5V18.5H8V5.5ZM9.5 5.5V18.5H20.5V5.5ZM13.5 9 16.5 12 13.5 15 12.44 13.94 14.38 12 12.44 10.06Z"/></svg>',
+)
+
 // Icon for the "Select products" action beside a dropdown's Choices.
 SvgRegistry.registerIcon(
   'icon-select-products',
@@ -116,6 +126,44 @@ const PRODUCT_REFS = {
 // Replaces a dropdown's choices with the products: value is the product id, text its description.
 const setProductChoices = (question, products) => {
   question.choices = products.map((p) => ({ value: p.id, text: p.description }))
+}
+
+// The Creator compacts the toolbox by itself below this width; only above it can it be toggled.
+const FULL_TOOLBOX_MIN_WIDTH = CreatorResponsivityManager.screenSizeBreakpoints.xl
+
+// Adds a tab-bar button that collapses the full toolbox to icons and back. Returns a
+// function to call with the creator's width; the button only shows while the toolbox would
+// otherwise be full.
+const addToolboxToggle = (creator) => {
+  let collapsed = false
+  let wide = false
+  const action = new Action({
+    id: 'toggle-toolbox',
+    showTitle: false,
+    visible: false,
+    visibleIndex: 0,
+    action: () => {
+      collapsed = !collapsed
+      update()
+    },
+  })
+  const update = () => {
+    const force = wide && collapsed
+    creator.toolbox.forceCompact = force || undefined
+    creator.toolbox.isCompact = force || !wide
+    action.visible = wide && creator.activeTab === 'designer'
+    action.iconName = collapsed ? 'icon-toolbox-expand' : 'icon-toolbox-collapse'
+    action.title = action.tooltip = collapsed ? 'Expand toolbox' : 'Collapse toolbox'
+  }
+  // First item in the tab bar (before Designer), rendered as a plain action button.
+  action.component = 'sv-action-bar-item'
+  creator.tabbedMenu.actions.splice(0, 0, action)
+  creator.onActiveTabChanged.add(update)
+  update()
+  return (width) => {
+    wide = width >= FULL_TOOLBOX_MIN_WIDTH
+    update()
+  }
 }
 
 export default function FormDesigner({ initialSchema, initialTab, onChange, readOnly = false }) {
@@ -196,6 +244,15 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
     if (initialTab) c.activeTab = initialTab
     return c
   })
+  const [setToolboxWidth] = useState(() => addToolboxToggle(creator))
+  const containerRef = useRef(null)
+
+  useEffect(() => {
+    const container = containerRef.current
+    const observer = new ResizeObserver(() => setToolboxWidth(container.offsetWidth))
+    observer.observe(container)
+    return () => observer.disconnect()
+  }, [setToolboxWidth])
 
   useEffect(() => {
     const handler = () => onChange(withoutDesignerOnlyOptions(creator.JSON))
@@ -205,7 +262,7 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
   }, [creator, onChange])
 
   return (
-    <div className="h-full w-full">
+    <div ref={containerRef} className="h-full w-full">
       <SurveyCreatorComponent creator={creator} />
       {picker && (
         <ProductPickerModal
