@@ -210,11 +210,11 @@
       },
       {
         "name": "phototag",
-        "title": "Photo and Tag",
+        "title": "Take Photo",
         "iconName": "icon-toolbox-phototag-24x24",
         "json": {
           "type": "panel",
-          "title": "Photo and Tag",
+          "title": "Take Photo",
           "photoTag": true,
           "elements": [
             {
