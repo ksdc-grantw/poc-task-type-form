@@ -245,6 +245,104 @@
             }
           ]
         }
+      },
+      {
+        "name": "pricesurvey",
+        "title": "Price Survey",
+        "iconName": "icon-toolbox-pricesurvey-24x24",
+        "json": {
+          "type": "panel",
+          "title": "Price Survey",
+          "priceSurvey": true,
+          "elements": [
+            {
+              "type": "matrixdropdown",
+              "name": "priceSurvey",
+              "title": "Price Survey",
+              "merchSurvey": true,
+              "alternateRows": true,
+              "columns": [
+                { "name": "Price", "title": "What is the price on shelf?", "cellType": "text", "inputType": "number", "min": 0 },
+                {
+                  "name": "PriceType",
+                  "title": "You MUST select if it is Unit Price or Shrink Price",
+                  "cellType": "radiogroup",
+                  "colCount": 0,
+                  "isRequired": true,
+                  "choices": [
+                    { "value": 1, "text": "Unit Price" },
+                    { "value": 2, "text": "Shrink Price" }
+                  ],
+                  "storeOthersAsComment": true
+                },
+                {
+                  "name": "Promo",
+                  "title": "Tick ONLY if this is a Promotion or Special Price",
+                  "cellType": "checkbox",
+                  "colCount": 0,
+                  "choices": [{ "value": 1, "text": "Promotion or Special Price" }],
+                  "storeOthersAsComment": true
+                }
+              ],
+              "rows": []
+            },
+            {
+              "type": "matrixdynamic",
+              "name": "housebrandPricing",
+              "title": "Capture Housebrand Pricing Information",
+              "description": "Add one row for each housebrand product you are capturing pricing information for",
+              "alternateRows": true,
+              "rowCount": 0,
+              "addRowText": "Add Housebrand Product",
+              "columns": [
+                {
+                  "name": "Select_Housebrand",
+                  "title": "Select a Housebrand",
+                  "cellType": "dropdown",
+                  "choices": [
+                    { "value": 1, "text": "Boxer Housebrand" },
+                    { "value": 2, "text": "Cambridge Housebrand" },
+                    { "value": 3, "text": "Checkers Housebrand" },
+                    { "value": 4, "text": "Choppies Housebrand" },
+                    { "value": 5, "text": "Food Lovers Housebrand" },
+                    { "value": 6, "text": "Makro Aro Housebrand" },
+                    { "value": 7, "text": "Makro First Value Housebrand" },
+                    { "value": 8, "text": "Makro M Housebrand" },
+                    { "value": 9, "text": "No Name Housebrand" },
+                    { "value": 10, "text": "PnP Housebrand" },
+                    { "value": 11, "text": "RiteBrand Housebrand" },
+                    { "value": 12, "text": "SaveMor Housebrand" },
+                    { "value": 13, "text": "SPAR Housebrand" },
+                    { "value": 14, "text": "Usave Housebrand" },
+                    { "value": 15, "text": "Other Housebrand" }
+                  ],
+                  "storeOthersAsComment": true
+                },
+                { "name": "Price", "title": "What is the price on shelf?", "cellType": "text", "inputType": "number", "min": 0 },
+                {
+                  "name": "PriceType",
+                  "title": "You MUST select if it is Unit Price or Shrink Price",
+                  "cellType": "radiogroup",
+                  "colCount": 0,
+                  "isRequired": true,
+                  "choices": [
+                    { "value": 1, "text": "Unit Price" },
+                    { "value": 2, "text": "Shrink Price" }
+                  ],
+                  "storeOthersAsComment": true
+                },
+                {
+                  "name": "Promo",
+                  "title": "Tick ONLY if this is a Promotion or Special Price",
+                  "cellType": "checkbox",
+                  "colCount": 0,
+                  "choices": [{ "value": 1, "text": "Promotion or Special Price" }],
+                  "storeOthersAsComment": true
+                }
+              ]
+            }
+          ]
+        }
       }
     ],
     "categories": [
@@ -268,7 +366,8 @@
           "merchsurvey",
           "dynamicmerchsurvey",
           "shopperquestionnaire",
-          "phototag"
+          "phototag",
+          "pricesurvey"
         ]
       }
     ]

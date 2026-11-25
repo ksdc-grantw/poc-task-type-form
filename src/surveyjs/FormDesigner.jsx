@@ -10,7 +10,7 @@ import './customQuestions.js'
 import './productRefEditor.js'
 import { setMerchProducts } from './merchSurvey.js'
 import { setShopperProducts } from './shopperQuestionnaire.js'
-import { isInPhotoTag, isPhotoTag } from './photoTag.js'
+import { isInLockedPanel, isLockedPanel } from './lockedPanel.js'
 import ProductPickerModal from '../products/ProductPickerModal.jsx'
 import { findProducts } from '../products/productApi.js'
 
@@ -84,6 +84,12 @@ SvgRegistry.registerIcon(
   '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2 5H6L7.5 3H12.5L14 5H18V11H16.5V6.5H3.5V13.5H11V15H2ZM10 7A2.5 2.5 0 1 1 10 12A2.5 2.5 0 1 1 10 7Z"/><path fill-rule="evenodd" d="M12.5 12.5H18L22 17L18 21.5H12.5ZM17 16A1 1 0 1 0 17 18A1 1 0 1 0 17 16Z"/></svg>',
 )
 
+// Price Survey: a price tag.
+SvgRegistry.registerIcon(
+  'icon-toolbox-pricesurvey-24x24',
+  '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2 5H14.5L21.5 12L14.5 19H2ZM3.5 6.5H13.88L19.38 12L13.88 17.5H3.5ZM7 10.5A1.5 1.5 0 1 1 7 13.5A1.5 1.5 0 1 1 7 10.5Z"/></svg>',
+)
+
 // Icon for the "Select products" action beside a dropdown's Choices.
 SvgRegistry.registerIcon(
   'icon-select-products',
@@ -150,31 +156,31 @@ export default function FormDesigner({ initialSchema, initialTab, onChange, read
       if (!isCopy && !question.locTitle.getJson()) question.title = DEFAULT_TITLE
       updateTemplateTitles(sender, question)
     })
-    // Take Photo holds exactly its Take Photos: nothing can be dropped into it, and its two
-    // questions can't be removed, copied, dragged out or converted.
+    // Take Photo and Price Survey hold exactly their preset questions: nothing can be dropped into
+    // them, and their questions can't be removed, copied, dragged out or converted.
     c.onDragDropAllow.add((_, options) => {
       const { target, insertBefore, insertAfter } = options
       const container = !insertBefore && !insertAfter && target?.isPanel ? target : target?.parent
-      if (isInPhotoTag(container)) options.allow = false
+      if (isInLockedPanel(container)) options.allow = false
     })
     c.onElementAllowOperations.add((_, options) => {
       // allowEdit: false hides the panel's "Add Question" button (title still editable in the property grid).
-      if (isPhotoTag(options.obj)) options.allowEdit = false
-      if (!isPhotoTag(options.obj?.parent)) return
+      if (isLockedPanel(options.obj)) options.allowEdit = false
+      if (!isLockedPanel(options.obj?.parent)) return
       Object.assign(options, { allowDelete: false, allowCopy: false, allowDrag: false, allowDragging: false, allowChangeType: false })
     })
-    // Anything else that lands inside (toolbox click or paste while a Take Photo question is
+    // Anything else that lands inside (toolbox click or paste while a locked panel's question is
     // selected) is moved to just after the panel.
-    const moveOutOfPhotoTag = (element) => {
+    const moveOutOfLockedPanel = (element) => {
       let panel = element.parent
-      while (panel && !isPhotoTag(panel)) panel = panel.parent
+      while (panel && !isLockedPanel(panel)) panel = panel.parent
       if (!panel) return
       element.parent.removeElement(element)
       panel.parent.addElement(element, panel.parent.elements.indexOf(panel) + 1)
       c.selectElement(element)
     }
-    c.onQuestionAdded.add((_, options) => moveOutOfPhotoTag(options.question))
-    c.onPanelAdded.add((_, options) => moveOutOfPhotoTag(options.panel))
+    c.onQuestionAdded.add((_, options) => moveOutOfLockedPanel(options.question))
+    c.onPanelAdded.add((_, options) => moveOutOfLockedPanel(options.panel))
     // e.g. "preview" when opened from the list's "Open Preview" link.
     if (initialTab) c.activeTab = initialTab
     return c
