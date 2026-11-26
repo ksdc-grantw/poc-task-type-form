@@ -3,7 +3,7 @@ import { Model } from 'survey-core'
 import { VisualizationPanel } from 'survey-analytics'
 import 'survey-core/survey-core.css'
 import 'survey-analytics/survey.analytics.css'
-import '../surveyjs/customQuestions.js'
+import '../surveyjs/customQuestions/index.js'
 import { agentTemplateApi } from './api.js'
 import { workEventApi } from './workEventApi.js'
 

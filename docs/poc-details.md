@@ -34,7 +34,7 @@ Vite, React (plain JavaScript), Tailwind CSS v4, React Router, SurveyJS Survey C
 
 ## The designer is a restricted Creator
 
-The Creator is configured for non-technical form authors through a UI preset (`src/surveyjs/preset.json`) plus a few event handlers in `src/surveyjs/FormDesigner.jsx`:
+The Creator is configured for non-technical form authors through a UI preset (`src/surveyjs/preset.json`), Custom Question Definitions (`src/surveyjs/customQuestions/`) plus a few event handlers in `src/surveyjs/designer/` (built by `createDesigner.js`):
 
 - **Tabs:** Designer and Preview only. No Logic, JSON editor, Translations or Themes tabs.
 - **Toolbox:** Single-Line Input, Long Text, Checkboxes, Radio Button Group, Dropdown and Yes/No, then a **Custom** group: Number, Photo, Merchandising Survey, Dynamic Merchandising Survey and Shopper Questionnaire.
@@ -81,7 +81,7 @@ A toolbox entry that creates a **built-in** question type with preset settings. 
 - **Saved as:** ordinary SurveyJS JSON (`{ "type": "text", "inputType": "number" }`).
 - **Device impact:** none. Any SurveyJS renderer already understands it.
 - **Cost:** low, a few lines of preset JSON, plus an icon if no built-in one fits (Number needed a custom icon).
-- **Limit:** after adding, authors can change the settings the property grid exposes. Photo has an extra hidden `photoOnly` flag, with the file-type settings hidden for it, so it stays images only. That flag is a custom property; renderers should register it (`src/surveyjs/photoOnly.js`) to recognise a photo field.
+- **Limit:** after adding, authors can change the settings the property grid exposes. Photo has an extra hidden `photoOnly` flag, with the file-type settings hidden for it, so it stays images only. That flag is a custom property; renderers should register it (by importing `src/surveyjs/customQuestions/index.js`) to recognise a photo field.
 
 ### 2. Specialized questions (Product; removed)
 

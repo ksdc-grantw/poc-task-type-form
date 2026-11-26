@@ -58,6 +58,10 @@ _Avoid_: Form definition, form JSON
 A domain-specific question type (e.g. Photo, Merchandising Survey) a Company Administrator can add to a Form beyond the Engine's built-in questions.
 _Avoid_: Custom component, widget
 
+**Custom Question Definition**:
+The single module that declares everything about one Custom Question: its toolbox entry, icon, schema properties, designer rules and how chosen Products are applied.
+_Avoid_: Question config, plugin
+
 **Form Version**:
 A snapshot of a Form Schema at a point in time. A Form's version number increases each time its Form Schema changes.
 _Avoid_: Revision

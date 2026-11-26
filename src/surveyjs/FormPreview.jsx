@@ -5,7 +5,7 @@ import { Survey } from 'survey-react-ui'
 import { PlainLight } from 'survey-core/themes'
 import 'survey-core/survey-core.css'
 import { useEngine } from '../shared/EngineContext.js'
-import './customQuestions.js'
+import './customQuestions/index.js'
 
 function buildModel(schema) {
   const model = new Model(schema)
