@@ -1,5 +1,4 @@
 import { defineCustomQuestion } from './defineCustomQuestion.js'
-import { merchProducts } from './merchProducts.js'
 
 const HOUSEBRANDS = [
   'Boxer',
@@ -45,8 +44,8 @@ const priceColumns = [
 ]
 
 // Price Survey: a locked panel holding
-// - a Price Survey matrix, one row per chosen product. It is a Merchandising Survey matrix
-//   (merchSurvey: true), so it gets Products in the property grid.
+// - a Price Survey matrix, one row per product ("Select products" on its Rows). It carries
+//   merchSurvey: true so renderers treat it as a Merchandising Survey matrix.
 // - a Housebrand Pricing dynamic matrix: the agent adds a row per housebrand, picked from a fixed list.
 export default defineCustomQuestion({
   name: 'pricesurvey',
@@ -55,7 +54,6 @@ export default defineCustomQuestion({
   icon: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2 5H14.5L21.5 12L14.5 19H2ZM3.5 6.5H13.88L19.38 12L13.88 17.5H3.5ZM7 10.5A1.5 1.5 0 1 1 7 13.5A1.5 1.5 0 1 1 7 10.5Z"/></svg>',
   marker: { on: 'panel', name: 'priceSurvey' },
   locked: true,
-  products: merchProducts,
   json: {
     type: 'panel',
     title: 'Price Survey',

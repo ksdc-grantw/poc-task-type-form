@@ -9,12 +9,12 @@
 //                 e.g. { on: 'panel', name: 'priceSurvey' }; json must set it to true
 //   json:         what the toolbox item creates
 //   locked:       optional; true keeps the panel to exactly its json questions in the designer
-//   products:     optional Products spec (see merchProducts.js) for the chosen-products property
 //   displayNames: optional { property: label } for json.type's properties (applies to every
 //                 question of that type)
 // }
+// Products need no field: the designer's "Select products" icon fills any choices or rows.
 export const defineCustomQuestion = (definition) => {
-  const { name, title, icon, iconName, marker, json, locked, products } = definition
+  const { name, title, icon, iconName, marker, json, locked } = definition
   const fail = (message) => {
     throw new Error(`Custom Question "${name}": ${message}`)
   }
@@ -23,6 +23,5 @@ export const defineCustomQuestion = (definition) => {
   if (!marker?.on || !marker?.name) fail('marker needs on and name')
   if (json?.[marker.name] !== true) fail(`json must set ${marker.name}: true`)
   if (locked && json.type !== 'panel') fail('only panels can be locked')
-  if (products && (!products.on || !products.name || !products.apply)) fail('products needs on, name and apply')
   return definition
 }

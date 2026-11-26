@@ -99,19 +99,46 @@
         },
         "matrixdropdown": {
           "properties": [
-            "merchProductRefs"
+            "rows"
           ]
+        },
+        "matrixdropdowncolumn@default": {
+          "properties": [
+            "title",
+            "isRequired"
+          ]
+        },
+        "matrixdropdowncolumn@dropdown": {
+          "properties": [
+            "choices"
+          ]
+        },
+        "matrixdropdowncolumn@tagbox": {
+          "properties": [
+            "choices"
+          ]
+        },
+        "matrixdropdowncolumn@checkbox": {
+          "properties": [
+            "choices"
+          ]
+        },
+        "matrixdropdowncolumn@radiogroup": {
+          "properties": [
+            "choices"
+          ]
+        },
+        "matrixdropdowncolumn@text": {
+          "properties": []
         },
         "matrixdynamic": {
           "properties": [
-            "merchProductRefs",
             "minRowCount",
             "maxRowCount"
           ]
         },
         "paneldynamic": {
           "properties": [
-            "shopperProductRefs",
             "minPanelCount",
             "maxPanelCount"
           ]

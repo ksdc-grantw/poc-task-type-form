@@ -7,7 +7,6 @@ import { SurveyCreator } from 'survey-creator-react'
 import { PlainLight } from 'survey-core/themes'
 import preset from '../preset.json'
 import { withCustomQuestions } from '../customQuestions/index.js'
-import '../productRefEditor.js'
 import { withDesignerOnlyOptions } from './designerOnlyOptions.js'
 import { questionNames } from './questionNames.js'
 import { lockedPanels } from './lockedPanels.js'
@@ -44,7 +43,7 @@ export const createDesigner = ({ schema, readOnly, initialTab, pickProducts }) =
   // 5. Our rules, each hooking Creator events (see each module):
   questionNames(creator) //               random, never-reused question names
   lockedPanels(creator) //                Take Photo / Price Survey keep exactly their questions
-  productButtons(creator, pickProducts) // "Select..." buttons that open the product picker
+  productButtons(creator, pickProducts) // "Select products" on choices and rows
 
   // 6. e.g. "preview" when opened from the list's "Open Preview" link.
   if (initialTab) creator.activeTab = initialTab

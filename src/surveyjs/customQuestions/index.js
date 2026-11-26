@@ -15,14 +15,10 @@ const addProperty = (on, json) => {
   if (!Serializer.findProperty(on, name)) Serializer.addProperty(on, json)
 }
 
-// Importing this module registers the schema properties the saved forms use (markers and
-// chosen products), so every renderer (designer, preview pages, device app) must import it.
+// Importing this module registers the marker properties the saved forms use, so every renderer
+// (designer, preview pages, device app) must import it.
 for (const { marker } of definitions) {
   addProperty(marker.on, { name: `${marker.name}:boolean`, default: false, visible: false })
-}
-const productSpecs = new Map(definitions.filter((d) => d.products).map((d) => [d.products.name, d.products]))
-for (const { on, name, visibleIf } of productSpecs.values()) {
-  addProperty(on, { name, type: 'productrefs', displayName: 'Products', category: 'general', visibleIf })
 }
 
 const is = (definition, element) => element?.getType?.() === definition.json.type && !!element[definition.marker.name]
@@ -36,10 +32,6 @@ export const isInLockedPanel = (element) => {
   for (let el = element; el && !el.isPage; el = el.parent) if (isLockedPanel(el)) return true
   return false
 }
-
-// The function that sets a chosen-products property (e.g. merchProductRefs) and writes the
-// products into the question; undefined for any other property.
-export const productSetter = (propertyName) => productSpecs.get(propertyName)?.apply
 
 // Designer only: registers the toolbox icons and property display names, and returns the
 // preset with a toolbox item per definition added. Throws if a toolbox category names an item
